@@ -27,23 +27,18 @@ public class FileParser {
                 .showOpenDialog(stage);
     }
 
-    public static List<UPbDataEntry> parseFile(File file)
+    public static List<UPbDataEntry> parseFile(File file) throws IOException
     {
         String fileName = file.getName();
         String extension = fileName.substring(
                 fileName.lastIndexOf(".") + 1,
                 fileName.length());
         if (extension.equals("csv")) {
-            try {
-                return parseCsv(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
+            return parseCsv(file);
         } else if (extension.equals("tsv")) {
             return parseTsv(file);
         } else if (extension.equals("txt")) {
-            return parseTxt(file, ",");
+            return parseTxt(file, "\t");
         } else {
             return null;
             // TODO throw error if invalid file extension
@@ -57,11 +52,34 @@ public class FileParser {
      */
     private static List<UPbDataEntry> parseCsv(File file) throws IOException {
 
+        return parseTxt(file, ",");
+
+    }
+
+    /**
+     * Parse TSV File
+     * @param file TSV file to read data from
+     * @return String array of values
+     */
+    private static List<UPbDataEntry> parseTsv(File file) throws IOException {
+
+        return parseTxt(file, "\t");
+
+    }
+
+    /**
+     * Parse TXT File given a delimiter
+     * @param file txt file to read
+     * @param delimiter data delimiter
+     * @return String array of values
+     */
+    private static List<UPbDataEntry> parseTxt(File file, String delimiter) throws IOException {
+
         List<UPbDataEntry> content = new ArrayList<UPbDataEntry>();
         String [] lines = readLines(file);
 
         for (String line : lines) {
-            String[] contentAsString = line.split(",");
+            String[] contentAsString = line.split(delimiter);
             if (contentAsString.length == 4) {              // No Corr Coef provided
                 content.add(
                         new UPbDataEntry(
@@ -88,25 +106,6 @@ public class FileParser {
         }
 
         return content;
-    }
-
-    /**
-     * Parse TSV File
-     * @param file TSV file to read data from
-     * @return String array of values
-     */
-    private static List<UPbDataEntry> parseTsv(File file) {
-        return null;
-    }
-
-    /**
-     * Parse TXT File given a delimiter
-     * @param file txt file to read
-     * @param delimiter data delimiter
-     * @return String array of values
-     */
-    private static List<UPbDataEntry> parseTxt(File file, String delimiter) {
-        return null;
     }
 
     private static String [] readLines(File file) {

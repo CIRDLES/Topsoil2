@@ -7,6 +7,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 /**
  * Created by sbunce on 5/30/2016.
  */
@@ -112,9 +114,13 @@ public class MainMenuBar extends MenuBar {
 
         // Import Table from File
         tableFromFileItem.setOnAction(event -> {
-            ((VBox)scene.getRoot()).getChildren().addAll(
-                    MenuItemEventHandler.handleTableFromFile()
-            );
+            try {
+                ((VBox)scene.getRoot()).getChildren().addAll(
+                        MenuItemEventHandler.handleTableFromFile()
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 

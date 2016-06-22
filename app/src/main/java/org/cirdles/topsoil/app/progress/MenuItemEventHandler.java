@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public class MenuItemEventHandler {
 
-    public static UPbTable handleTableFromFile() {
+    public static UPbTable handleTableFromFile() throws IOException {
 
         // select file
         File file = FileParser.openTableDialogue(new Stage());
