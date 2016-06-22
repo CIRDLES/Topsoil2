@@ -8,19 +8,22 @@ import javafx.stage.Stage;
 
 public class MainWindow extends Application {
 
+
     @Override
     public void start(Stage primaryStage) {
 
+        Scene scene = new Scene(new VBox(), 750, 750);
+
         // Menu Bar
-        MainMenuBar menuBar = new MainMenuBar();
+        MainMenuBar menuBar = new MainMenuBar(scene);
         MainButtonsBar buttonBar = new MainButtonsBar();
+        TableView table = new TableView();
 
         // Create Scene
-        Scene scene = new Scene(new VBox(), 750, 750);
         ((VBox) scene.getRoot()).getChildren().addAll(
                 menuBar.getMenuBar(),
-                buttonBar.getButtons(),
-                new TableView<DataEntry>());
+                buttonBar.getButtons()
+        );
 
         // Display Scene
         primaryStage.setTitle("Topsoil Test");
@@ -31,4 +34,5 @@ public class MainWindow extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }
