@@ -7,7 +7,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
-import org.cirdles.topsoil.app.Topsoil;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 
 import java.io.IOException;

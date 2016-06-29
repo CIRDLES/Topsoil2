@@ -41,7 +41,7 @@ public class MenuItemEventHandler {
         ObservableList<TopsoilDataEntry> data = FXCollections.observableList(entries);
 
         // create table
-        if (data == null ||  isotopeType == null ) {
+        if (data == null ||  isotopeType == null) {
             table = null;
         } else {
             table = new TopsoilTable(data, headers, isotopeType);
