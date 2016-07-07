@@ -123,7 +123,7 @@ public class MainMenuBar extends MenuBar {
         // Import Table from File
         tableFromFileItem.setOnAction(event -> {
 
-            TopsoilTable table = null;
+            NewTable table = null;
 
             // get table from selections
             try {
@@ -146,7 +146,7 @@ public class MainMenuBar extends MenuBar {
         newTableItem.setOnAction(event -> {
 
             // get new table
-            TopsoilTable table = handleNewTable();
+            NewTable table = handleNewTable();
 
             // display new table
             tabs.add(table);

@@ -1,5 +1,6 @@
 package org.cirdles.topsoil.app.progress;
 
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
 /**
@@ -13,8 +14,10 @@ public class TopsoilTabPane extends TabPane {
     }
 
     //Adds a new tab to the MainWindow tab pane
-    public void add (TopsoilTable table) {
-        TopsoilTab newTab = new TopsoilTab(table);
+    public void add (NewTable table) {
+        Tab newTab = new Tab();
+        //TODO Create a way for user to rename tabs
+        newTab.setText("Unnamed Tab");
         newTab.setContent(table);
         this.getTabs().addAll(newTab);
         this.getSelectionModel().select(newTab);

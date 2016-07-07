@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
  */
 public class MainButtonsBar extends HBox {
 
+    //Scene
     private HBox buttonBar = new HBox();
 
     //Passed the main scene and tabbed pane
@@ -25,7 +26,7 @@ public class MainButtonsBar extends HBox {
         Button newTableButton = new Button("Create New Table");
         newTableButton.setPrefSize(150, 30);
         newTableButton.setOnAction(event -> {
-            TopsoilTable table = MenuItemEventHandler.handleNewTable();
+            NewTable table = MenuItemEventHandler.handleNewTable();
             tabs.add(table);
         });
 

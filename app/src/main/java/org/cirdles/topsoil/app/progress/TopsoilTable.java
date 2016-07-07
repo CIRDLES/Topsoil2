@@ -8,6 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,14 +37,15 @@ public class TopsoilTable extends TableView<TopsoilDataEntry> {
         } else if (headers.length < 4 || headers.length > 5) {
             alerter = new ErrorAlerter();
             alerter.alert("Invalid Headers");
+            this.headers = isotopeType.getHeaders();
         } else if (headers.length == 4) {
             // populate with provided headers and add Corr Coef column
             for (int i = 0; i < headers.length; i ++) {
                 this.headers[i] = headers[i];
-                this.headers[5] = "Corr Coef";
             }
+            this.headers[5] = "Corr Coef";
         } else if (headers.length == 5) {
-            this.headers = headers;
+            this.headers = Arrays.copyOf(headers, headers.length);
         }
 
         // enter data
