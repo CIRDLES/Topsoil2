@@ -71,7 +71,7 @@ public class MainMenuBar extends MenuBar {
         saveTableAsItem = new MenuItem("Save Table As");
 
         newTableItem.setOnAction(event -> {
-            TopsoilTable table = MenuItemEventHandler.handleNewTable();
+            NewTable table = MenuItemEventHandler.handleNewTable();
             tabs.add(table);
         });
 
