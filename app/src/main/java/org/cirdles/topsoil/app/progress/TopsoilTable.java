@@ -1,93 +1,65 @@
 package org.cirdles.topsoil.app.progress;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * Created by benjaminmuldrow on 6/20/16.
+ * Created by benjaminmuldrow on 7/6/16.
  */
-public class TopsoilTable extends TableView<TopsoilDataEntry> {
+public class TopsoilTable {
 
-    private Alerter alerter;
+    private final Alerter alerter = new ErrorAlerter();
+    private String[] headers;
+    private TableView<TopsoilDataEntry> table;
+    private IsotopeType isotopeType;
 
-    private TableColumn leadUraniumCol;
-    private TableColumn leadUraniumStDCol;
-    private TableColumn leadUraniumCol2;
-    private TableColumn leadUraniumStDCol2;
-    private TableColumn corrCoefCol;
+    public TopsoilTable(String [] headers, IsotopeType isotopeType, TopsoilDataEntry... dataEntries) {
 
-    private String [] headers;
+        this.table = new TableView<>();
+        this.isotopeType = isotopeType;
 
-    public TopsoilTable(List<TopsoilDataEntry> entries, String [] headers, IsotopeType isotopeType) {
-
-        super();
-        ObservableList<TopsoilDataEntry> data = FXCollections.observableList(entries);
-
-        // enter headers
+        // populate headers
+        // TODO: separate into individual function
         if (headers == null) {
             this.headers = isotopeType.getHeaders();
-        } else if (headers.length < 4 || headers.length > 5) {
-            alerter = new ErrorAlerter();
-            alerter.alert("Invalid Headers");
-            this.headers = isotopeType.getHeaders();
-        } else if (headers.length == 4) {
-            // populate with provided headers and add Corr Coef column
-            for (int i = 0; i < headers.length; i ++) {
+        } else if (headers.length < isotopeType.getHeaders().length) {
+            int difference = isotopeType.getHeaders().length - headers.length;
+            this.headers = new String [isotopeType.getHeaders().length];
+            for (int i = 0; i < isotopeType.getHeaders().length - difference; i ++) {
                 this.headers[i] = headers[i];
             }
-            this.headers[5] = "Corr Coef";
-        } else if (headers.length == 5) {
-            this.headers = Arrays.copyOf(headers, headers.length);
+            for (int i = isotopeType.getHeaders().length - difference; i < isotopeType.getHeaders().length; i ++) {
+                this.headers[i] = isotopeType.getHeaders()[i];
+            }
         }
 
-        // enter data
-        this.setItems(data);
-        this.setColumns();
-        this.getColumns().addAll(
-                leadUraniumCol,
-                leadUraniumStDCol,
-                leadUraniumCol2,
-                leadUraniumStDCol2,
-                corrCoefCol
-        );
+        this.table.getColumns().addAll(createColumns(this.headers));
+        this.table.getItems().addAll(dataEntries);
+
     }
 
-    private void setColumns() {
-        leadUraniumCol = new TableColumn(headers[0]);
-        leadUraniumCol.setCellValueFactory(
-                new PropertyValueFactory<TopsoilDataEntry, Double>("leadUranium")
-        );
-
-        leadUraniumStDCol = new TableColumn(headers[1]);
-        leadUraniumStDCol.setCellValueFactory(
-                new PropertyValueFactory<TopsoilDataEntry, Double>("leadUraniumStD")
-        );
-
-        leadUraniumCol2 = new TableColumn(headers[2]);
-        leadUraniumCol2.setCellValueFactory(
-                new PropertyValueFactory<TopsoilDataEntry, Double>("leadUranium2")
-        );
-
-        leadUraniumStDCol2 = new TableColumn(headers[3]);
-        leadUraniumStDCol2.setCellValueFactory(
-                new PropertyValueFactory<TopsoilDataEntry, Double>("leadUraniumStD2")
-        );
-
-        corrCoefCol = new TableColumn(headers[4]);
-        corrCoefCol.setCellValueFactory(
-                new PropertyValueFactory<TopsoilDataEntry, Double>("corrCoef")
-        );
+    private TableColumn [] createColumns(String [] headers) {
+        TableColumn [] result = new TableColumn[headers.length];
+        for (int i = 0; i < headers.length; i ++) {
+            TableColumn<TopsoilDataEntry, Double> column = new TableColumn<>(headers[i]);
+            final int columnIndex = i;
+            column.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<TopsoilDataEntry, Double>, ObservableValue<Double>>() {
+                @Override
+                public ObservableValue<Double> call(TableColumn.CellDataFeatures<TopsoilDataEntry, Double> param) {
+                    return (ObservableValue) param.getValue().getProperties().get(columnIndex);
+                }
+            });
+            result[i] = column;
+        }
+        return result;
     }
 
-    public static void createNewRow(TopsoilTable table) {
-        table.getItems().add(new TopsoilDataEntry(0,0,0,0,0));
+    public TableView getTable() {
+        return this.table;
     }
+
 }

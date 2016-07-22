@@ -26,7 +26,7 @@ public class MainButtonsBar extends HBox {
         Button newTableButton = new Button("Create New Table");
         newTableButton.setPrefSize(150, 30);
         newTableButton.setOnAction(event -> {
-            NewTable table = MenuItemEventHandler.handleNewTable();
+            TopsoilTable table = MenuItemEventHandler.handleNewTable();
             tabs.add(table);
         });
 

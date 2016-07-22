@@ -71,7 +71,7 @@ public class MainMenuBar extends MenuBar {
         saveTableAsItem = new MenuItem("Save Table As");
 
         newTableItem.setOnAction(event -> {
-            NewTable table = MenuItemEventHandler.handleNewTable();
+            TopsoilTable table = MenuItemEventHandler.handleNewTable();
             tabs.add(table);
         });
 
@@ -123,7 +123,7 @@ public class MainMenuBar extends MenuBar {
         // Import Table from File
         tableFromFileItem.setOnAction(event -> {
 
-            NewTable table = null;
+            TopsoilTable table = null;
 
             // get table from selections
             try {
@@ -146,7 +146,7 @@ public class MainMenuBar extends MenuBar {
         newTableItem.setOnAction(event -> {
 
             // get new table
-            NewTable table = handleNewTable();
+            TopsoilTable table = handleNewTable();
 
             // display new table
             tabs.add(table);

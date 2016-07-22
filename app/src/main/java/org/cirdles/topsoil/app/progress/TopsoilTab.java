@@ -3,6 +3,7 @@ package org.cirdles.topsoil.app.progress;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -18,7 +19,7 @@ public class TopsoilTab extends Tab {
     public TopsoilTab(TopsoilTable table) {
         this.setGraphic(label);
         this.table = table;
-        this.setContent(this.table);
+        this.setContent(this.table.getTable());
         label.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -35,8 +36,8 @@ public class TopsoilTab extends Tab {
         return tabName;
     }
 
-    public TopsoilTable getTopsoilTable() {
-        return table;
+    public TableView getTopsoilTable() {
+        return table.getTable();
     }
 
 }

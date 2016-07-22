@@ -25,9 +25,9 @@ public class MenuItemEventHandler {
      * @return Topsoil Table file
      * @throws IOException for invalid file selection
      */
-    public static NewTable handleTableFromFile() throws IOException {
+    public static TopsoilTable handleTableFromFile() throws IOException {
 
-        NewTable table;
+        TopsoilTable table;
 
         // select file
         File file = FileParser.openTableDialogue(new Stage());
@@ -50,15 +50,15 @@ public class MenuItemEventHandler {
         if (data == null ||  isotopeType == null) {
             table = null;
         } else {
-            table = new NewTable(data, headers, isotopeType);
+            table = new TopsoilTable(headers, isotopeType, data.toArray(new TopsoilDataEntry[data.size()]));
         }
 
         return table;
     }
 
-    public static NewTable handleNewTable() {
+    public static TopsoilTable handleNewTable() {
 
-        NewTable table;
+        TopsoilTable table;
 
         // select isotope flavor
         IsotopeType isotopeType = IsotopeSelectionDialog.selectIsotope(new IsotopeSelectionDialog());
@@ -68,7 +68,7 @@ public class MenuItemEventHandler {
         ObservableList<TopsoilDataEntry> data = FXCollections.observableList(entries);
 
         // create empty table
-        table = new NewTable(data, null, isotopeType);
+        table = new TopsoilTable(null, isotopeType, data.toArray(new TopsoilDataEntry[data.size()]));
 
         return table;
     }
