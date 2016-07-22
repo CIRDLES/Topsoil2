@@ -23,7 +23,7 @@ public class TopsoilTable {
         // initialize table
         this.table = new TableView<>();
         this.table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        TableView.TableViewSelectionModel selectionModel =this.table.getSelectionModel();
+        TableView.TableViewSelectionModel selectionModel = this.table.getSelectionModel();
         selectionModel.setCellSelectionEnabled(true);
 
         // initialize isotope type
@@ -83,23 +83,21 @@ public class TopsoilTable {
         // populate headers with defaults if no headers are provided
         if (headers == null) {
             result = isotopeType.getHeaders();
-        }
 
         // if some headers are provided, populate
-        else if (headers.length < isotopeType.getHeaders().length) {
+        } else if (headers.length < isotopeType.getHeaders().length) {
             int difference = isotopeType.getHeaders().length - headers.length;
-            result = new String [isotopeType.getHeaders().length];
-            for (int i = 0; i < isotopeType.getHeaders().length - difference; i ++) {
+            result = new String[isotopeType.getHeaders().length];
+            for (int i = 0; i < isotopeType.getHeaders().length - difference; i++) {
                 result[i] = headers[i];
             }
             for (int i = isotopeType.getHeaders().length - difference;
-                 i < isotopeType.getHeaders().length; i ++) {
+                    i < isotopeType.getHeaders().length; i++) {
                 result[i] = isotopeType.getHeaders()[i];
             }
-        }
 
         // if too many headers are provided, only use the first X (depending on isotope flavor)
-        else { // if (headers.length >= isotopeType.getHeaders().length)
+        } else { // if (headers.length >= isotopeType.getHeaders().length)
             for (int i = 0; i < isotopeType.getHeaders().length; i ++) {
                 result[i] = headers[i];
             }
