@@ -17,7 +17,7 @@ public class TopsoilTabPane extends TabPane {
     public void add (TopsoilTable table) {
         Tab newTab = new Tab();
         //TODO Create a way for user to rename tabs
-        newTab.setText("Unnamed Tab");
+        newTab.setText(table.getTitle());
         newTab.setContent(table.getTable());
         this.getTabs().addAll(newTab);
         this.getSelectionModel().select(newTab);
