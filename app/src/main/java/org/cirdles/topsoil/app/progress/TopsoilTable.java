@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 
@@ -17,6 +18,7 @@ public class TopsoilTable {
     private TableView<TopsoilDataEntry> table;
     private IsotopeType isotopeType;
     private String title = "Untitled Table";
+    private TopsoilDataEntry [] dataEntries;
 
     public TopsoilTable(String [] headers, IsotopeType isotopeType, TopsoilDataEntry... dataEntries) {
 
@@ -25,6 +27,7 @@ public class TopsoilTable {
         this.table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableView.TableViewSelectionModel selectionModel = this.table.getSelectionModel();
         selectionModel.setCellSelectionEnabled(true);
+        this.dataEntries = dataEntries;
 
         // initialize isotope type
         this.isotopeType = isotopeType;
@@ -40,6 +43,42 @@ public class TopsoilTable {
             this.table.getItems().addAll(dataEntries);
         }
 
+        // Handle Keyboard Events
+        table.setOnKeyPressed(keyevent -> {
+
+            // Tab focuses right cell
+            // Shift + Tab focuses left cell
+            if (keyevent.getCode().equals(KeyCode.TAB)) {
+                if (keyevent.isShiftDown()) {
+                    selectionModel.selectLeftCell();
+                } else {
+                    selectionModel.selectRightCell();
+                }
+
+                keyevent.consume();
+            }
+
+            // Enter moves down or creates new empty row
+            // Shift + Enter moved up a row
+            if (keyevent.getCode().equals(KeyCode.ENTER)) {
+                if (keyevent.isShiftDown()) {
+                    selectionModel.selectAboveCell();
+                } else {
+                    // if on last row
+                    if (selectionModel.getSelectedIndex() == table.getItems().size() - 1) {
+                        // add empty row
+                        this.table.getItems().add(new TopsoilDataEntry());
+                        selectionModel.selectBelowCell();
+                    } else {
+                        // move down
+                        selectionModel.selectBelowCell();
+                    }
+                }
+                keyevent.consume();
+            }
+
+        });
+
     }
 
     /**
@@ -53,6 +92,7 @@ public class TopsoilTable {
 
         for (int i = 0; i < headers.length; i++) {
 
+            // make a new column for each header
             TableColumn<TopsoilDataEntry, Double> column = new TableColumn<>(headers[i]);
             final int columnIndex = i;
 
@@ -64,6 +104,9 @@ public class TopsoilTable {
                     return (ObservableValue) param.getValue().getProperties().get(columnIndex);
                 }
             });
+
+            // add functional column to the array of columns
+            result[i] = column;
         }
 
         return result;
@@ -104,6 +147,10 @@ public class TopsoilTable {
         return result;
     }
 
+    public void addRow() {
+        this.table.getItems().add(new TopsoilDataEntry());
+    }
+
     public TableView getTable() {
         return this.table;
     }
@@ -114,5 +161,9 @@ public class TopsoilTable {
 
     public String getTitle() {
         return title;
+    }
+
+    public String [] getHeaders() {
+        return this.headers;
     }
 }

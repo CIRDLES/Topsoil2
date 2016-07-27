@@ -1,8 +1,10 @@
 package org.cirdles.topsoil.app.progress;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import org.cirdles.topsoil.app.util.YesNoAlert;
 
 /**
  * Created by sbunce on 5/30/2016.
@@ -23,6 +25,7 @@ public class MainButtonsBar extends HBox {
         buttonBar.setPadding(new Insets(15, 12, 15, 12));
         buttonBar.setStyle("-fx-background-color: #DCDCDC;");
 
+        // New Table button
         Button newTableButton = new Button("Create New Table");
         newTableButton.setPrefSize(150, 30);
         newTableButton.setOnAction(event -> {
@@ -30,6 +33,7 @@ public class MainButtonsBar extends HBox {
             tabs.add(table);
         });
 
+        // Clear Table button
         Button clearButton = new Button("Clear Table");
         clearButton.setPrefSize(150, 30);
 
