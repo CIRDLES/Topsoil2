@@ -8,6 +8,8 @@ import javafx.scene.input.KeyCode;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 
+import java.util.Arrays;
+
 /**
  * Created by benjaminmuldrow on 7/6/16.
  */
@@ -28,6 +30,7 @@ public class TopsoilTable {
         TableView.TableViewSelectionModel selectionModel = this.table.getSelectionModel();
         selectionModel.setCellSelectionEnabled(true);
         this.dataEntries = dataEntries;
+        this.table.setEditable(true);
 
         // initialize isotope type
         this.isotopeType = isotopeType;
@@ -37,11 +40,25 @@ public class TopsoilTable {
 
         // populate table
         this.table.getColumns().addAll(createColumns(this.headers));
-        if (dataEntries.length == 0) {
-            this.table.getItems().add(new TopsoilDataEntry());
-        } else {
+        if (dataEntries.length == 0) { // no data provided
+
+            TopsoilDataEntry dataEntry = new TopsoilDataEntry();
+
+            // add a 0 value for each column
+            for (String header : this.headers) {
+                dataEntry.addEntries(0.0);
+            }
+
+            this.table.getItems().add(dataEntry);
+
+        } else { // data is provided
+
             this.table.getItems().addAll(dataEntries);
+
         }
+
+        // Debug
+        System.out.println(Arrays.toString(extractData()));
 
         // Handle Keyboard Events
         table.setOnKeyPressed(keyevent -> {
@@ -60,14 +77,14 @@ public class TopsoilTable {
 
             // Enter moves down or creates new empty row
             // Shift + Enter moved up a row
-            if (keyevent.getCode().equals(KeyCode.ENTER)) {
+            else if (keyevent.getCode().equals(KeyCode.ENTER)) {
                 if (keyevent.isShiftDown()) {
                     selectionModel.selectAboveCell();
                 } else {
                     // if on last row
                     if (selectionModel.getSelectedIndex() == table.getItems().size() - 1) {
                         // add empty row
-                        this.table.getItems().add(new TopsoilDataEntry());
+                        addRow();
                         selectionModel.selectBelowCell();
                     } else {
                         // move down
@@ -86,7 +103,7 @@ public class TopsoilTable {
      * @param headers Array of header strings
      * @return an Array of functional Table Columns
      */
-    private TableColumn [] createColumns(String [] headers) {
+    private TableColumn[] createColumns(String [] headers) {
 
         TableColumn[] result = new TableColumn[headers.length];
 
@@ -98,11 +115,16 @@ public class TopsoilTable {
 
             // override cell value factory to accept the i'th index of a data entry for the i'th column
             column.setCellValueFactory(param -> {
-                if (param.getValue().getProperties().size() == 0) {
-                    return (ObservableValue) new SimpleDoubleProperty(0.0);
-                } else {
-                    return (ObservableValue) param.getValue().getProperties().get(columnIndex);
-                }
+                        if (param.getValue().getProperties().size() == 0) {
+                            return (ObservableValue) new SimpleDoubleProperty(0.0);
+                        } else {
+                            return (ObservableValue) param.getValue().getProperties().get(columnIndex);
+                        }
+                    });
+
+            // override cell factory to custom editable cells
+            column.setCellFactory(value -> {
+                return new TopsoilTableCell();
             });
 
             // add functional column to the array of columns
@@ -145,6 +167,10 @@ public class TopsoilTable {
         }
 
         return result;
+    }
+
+    private TopsoilDataEntry [] extractData() {
+        return this.table.getItems().toArray(new TopsoilDataEntry [this.getTable().getItems().size()]);
     }
 
     public void addRow() {

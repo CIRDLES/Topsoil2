@@ -3,12 +3,15 @@ package org.cirdles.topsoil.app.progress;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.cirdles.topsoil.app.plot.PlotWindow;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
+import org.cirdles.topsoil.plot.uth.evolution.EvolutionPlot;
 
 import java.io.IOException;
 

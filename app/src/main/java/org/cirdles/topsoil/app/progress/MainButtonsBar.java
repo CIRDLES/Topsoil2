@@ -1,10 +1,8 @@
 package org.cirdles.topsoil.app.progress;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import org.cirdles.topsoil.app.util.YesNoAlert;
 
 /**
  * Created by sbunce on 5/30/2016.
