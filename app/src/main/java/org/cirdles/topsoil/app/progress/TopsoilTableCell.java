@@ -3,6 +3,8 @@ package org.cirdles.topsoil.app.progress;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import org.cirdles.topsoil.app.util.Alerter;
+import org.cirdles.topsoil.app.util.ErrorAlerter;
 
 /**
  * Created by benjaminmuldrow on 7/27/16.
@@ -10,24 +12,37 @@ import javafx.scene.input.KeyCode;
 public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
 
     private TextField textField;
+    private Alerter alerter;
 
     public TopsoilTableCell() {
         super();
+
+        this.alerter = new ErrorAlerter();
 
         this.setOnKeyPressed(keyEvent -> {
 
             if (keyEvent.getCode() == KeyCode.ENTER ||
                     keyEvent.getCode() == KeyCode.TAB) {
-                Double newVal = new Double(textField.getText());
-                commitEdit(newVal);
-                updateItem(newVal, textField.getText().isEmpty());
-                keyEvent.consume();
+                try {
+                    Double newVal = new Double(textField.getText());
+                    commitEdit(newVal);
+                    updateItem(newVal, textField.getText().isEmpty());
+                } catch (NumberFormatException e) {
+                    alerter.alert("Entry must be a number!");
+                    cancelEdit();
+                } finally {
+                    keyEvent.consume();
+                }
             } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
                 cancelEdit();
                 keyEvent.consume();
             }
         });
 
+        this.setOnContextMenuRequested(menuEvent -> {
+            this.setContextMenu(new TopsoilTableCellContextMenu());
+            menuEvent.consume();
+        });
     }
 
     @Override

@@ -173,8 +173,20 @@ public class TopsoilTable {
         return this.table.getItems().toArray(new TopsoilDataEntry [this.getTable().getItems().size()]);
     }
 
+    public void deleteRow(int index) {
+        this.dataEntries[index].getProperties().remove(0, headers.length);
+    }
+
     public void addRow() {
-        this.table.getItems().add(new TopsoilDataEntry());
+        TopsoilDataEntry dataEntry = new TopsoilDataEntry();
+        for (String header : this.headers) {
+            dataEntry.addEntries(0.0);
+        }
+        this.table.getItems().add(dataEntry);
+    }
+
+    public void clear() {
+        this.getTable().getItems().clear();
     }
 
     public TableView getTable() {

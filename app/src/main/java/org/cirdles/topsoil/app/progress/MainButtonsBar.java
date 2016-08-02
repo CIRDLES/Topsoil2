@@ -34,6 +34,11 @@ public class MainButtonsBar extends HBox {
         // Clear Table button
         Button clearButton = new Button("Clear Table");
         clearButton.setPrefSize(150, 30);
+        clearButton.setOnAction(event -> {
+            // clear table and add an empty row
+            tabs.getSelectedTab().getTopsoilTable().clear();
+            tabs.getSelectedTab().getTopsoilTable().addRow();
+        });
 
         buttonBar.getChildren()
                  .addAll(newTableButton,

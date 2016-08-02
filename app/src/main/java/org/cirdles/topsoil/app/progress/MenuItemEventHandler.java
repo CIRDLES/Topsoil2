@@ -68,12 +68,8 @@ public class MenuItemEventHandler {
         // select isotope flavor
         IsotopeType isotopeType = IsotopeSelectionDialog.selectIsotope(new IsotopeSelectionDialog());
 
-        // create empty dataset
-        List<TopsoilDataEntry> entries = new ArrayList<>();
-        ObservableList<TopsoilDataEntry> data = FXCollections.observableList(entries);
-
         // create empty table
-        table = new TopsoilTable(null, isotopeType, data.toArray(new TopsoilDataEntry[data.size()]));
+        table = new TopsoilTable(null, isotopeType, new TopsoilDataEntry[]{} );
 
         return table;
     }
