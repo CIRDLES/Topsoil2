@@ -23,20 +23,18 @@ public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
 
             if (keyEvent.getCode() == KeyCode.ENTER ||
                     keyEvent.getCode() == KeyCode.TAB) {
-                try {
-                    Double newVal = new Double(textField.getText());
+                Double newVal = getNumber(textField);
+                if (newVal != null) {
                     commitEdit(newVal);
                     updateItem(newVal, textField.getText().isEmpty());
-                } catch (NumberFormatException e) {
-                    alerter.alert("Entry must be a number!");
+                } else {
                     cancelEdit();
-                } finally {
-                    keyEvent.consume();
+                    alerter.alert("Entry must be a number");
                 }
             } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
                 cancelEdit();
-                keyEvent.consume();
             }
+            keyEvent.consume();
         });
 
         this.setOnContextMenuRequested(menuEvent -> {
@@ -89,9 +87,20 @@ public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
         this.textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             // if new value contains non-numerics or is empty
             if (!newValue) {
-                commitEdit(new Double(textField.getText()));
+                commitEdit(getNumber(this.textField));
             }
         });
+    }
+
+    private Double getNumber(TextField textField) {
+        Double result = null;
+        try {
+            result = new Double(textField.getText());
+        } catch (NumberFormatException e) {
+            //
+        } finally {
+            return result;
+        }
     }
 
 }

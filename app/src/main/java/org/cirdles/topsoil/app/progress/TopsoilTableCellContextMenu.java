@@ -1,8 +1,9 @@
 package org.cirdles.topsoil.app.progress;
 
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TableCell;
 
 /**
  * Created by benjaminmuldrow on 8/1/16.
@@ -38,7 +39,7 @@ public class TopsoilTableCellContextMenu extends ContextMenu {
 
         // add actions
         deleteRowItem.setOnAction(action -> {
-            cell.getTableView().getItems().remove(cell.getIndex());
+            this.cell.getTableView().getItems().remove(cell.getIndex());
         });
 
         // add items to context menu

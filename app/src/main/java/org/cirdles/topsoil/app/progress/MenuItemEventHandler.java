@@ -16,7 +16,6 @@ import org.cirdles.topsoil.app.util.YesNoAlert;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,7 +68,7 @@ public class MenuItemEventHandler {
         IsotopeType isotopeType = IsotopeSelectionDialog.selectIsotope(new IsotopeSelectionDialog());
 
         // create empty table
-        table = new TopsoilTable(null, isotopeType, new TopsoilDataEntry[]{} );
+        table = new TopsoilTable(null, isotopeType, new TopsoilDataEntry[]{});
 
         return table;
     }
@@ -109,7 +108,7 @@ public class MenuItemEventHandler {
         // get user confirmation
         if (response.isPresent()
                 && response.get() == ButtonType.YES) {
-            resultingTable = new TopsoilTable(table.getHeaders(), table.getIsotopeType(), null);
+            resultingTable = new TopsoilTable(table.getHeaders(), table.getIsotopeType(), new TopsoilDataEntry[]{});
         }
 
         return resultingTable;

@@ -8,8 +8,6 @@ import javafx.scene.input.KeyCode;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 
-import java.util.Arrays;
-
 /**
  * Created by benjaminmuldrow on 7/6/16.
  */
@@ -57,12 +55,8 @@ public class TopsoilTable {
 
         }
 
-        // Debug
-        System.out.println(Arrays.toString(extractData()));
-
         // Handle Keyboard Events
         table.setOnKeyPressed(keyevent -> {
-
             // Tab focuses right cell
             // Shift + Tab focuses left cell
             if (keyevent.getCode().equals(KeyCode.TAB)) {
@@ -73,11 +67,10 @@ public class TopsoilTable {
                 }
 
                 keyevent.consume();
-            }
 
             // Enter moves down or creates new empty row
             // Shift + Enter moved up a row
-            else if (keyevent.getCode().equals(KeyCode.ENTER)) {
+            } else if (keyevent.getCode().equals(KeyCode.ENTER)) {
                 if (keyevent.isShiftDown()) {
                     selectionModel.selectAboveCell();
                 } else {
@@ -95,7 +88,6 @@ public class TopsoilTable {
             }
 
         });
-
     }
 
     /**
@@ -115,12 +107,12 @@ public class TopsoilTable {
 
             // override cell value factory to accept the i'th index of a data entry for the i'th column
             column.setCellValueFactory(param -> {
-                        if (param.getValue().getProperties().size() == 0) {
-                            return (ObservableValue) new SimpleDoubleProperty(0.0);
-                        } else {
-                            return (ObservableValue) param.getValue().getProperties().get(columnIndex);
-                        }
-                    });
+                if (param.getValue().getProperties().size() == 0) {
+                    return (ObservableValue) new SimpleDoubleProperty(0.0);
+                } else {
+                    return (ObservableValue) param.getValue().getProperties().get(columnIndex);
+                }
+            });
 
             // override cell factory to custom editable cells
             column.setCellFactory(value -> {
@@ -202,6 +194,6 @@ public class TopsoilTable {
     }
 
     public String [] getHeaders() {
-        return this.headers;
+        return this.headers.clone();
     }
 }
