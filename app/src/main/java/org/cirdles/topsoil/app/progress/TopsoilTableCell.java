@@ -40,7 +40,7 @@ public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
         });
 
         this.setOnContextMenuRequested(menuEvent -> {
-            this.setContextMenu(new TopsoilTableCellContextMenu());
+            this.setContextMenu(new TopsoilTableCellContextMenu(this));
             menuEvent.consume();
         });
     }
