@@ -1,4 +1,4 @@
-package org.cirdles.topsoil.app.progress;
+package org.cirdles.topsoil.app.progress.plot;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;

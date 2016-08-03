@@ -1,13 +1,16 @@
-package org.cirdles.topsoil.app.progress;
+package org.cirdles.topsoil.app.progress.tab;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
+import org.cirdles.topsoil.app.progress.isotope.IsotopeType;
+import org.cirdles.topsoil.app.progress.table.GenericTable;
+import org.cirdles.topsoil.app.progress.table.TopsoilTable;
 
 /**
  * Created by sbunce on 6/30/2016.
  */
-public class TopsoilTab extends Tab {
+public class TopsoilTab extends Tab implements GenericTab {
 
     private TopsoilTable table;
 
@@ -27,11 +30,12 @@ public class TopsoilTab extends Tab {
         });
     }
 
+    @Override
     public TableView getTable() {
         return table.getTable();
     }
 
-    public TopsoilTable getTopsoilTable() {
+    public GenericTable getGenericTable() {
         return table;
     }
 

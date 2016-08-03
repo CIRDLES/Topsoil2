@@ -1,17 +1,18 @@
-package org.cirdles.topsoil.app.progress;
+package org.cirdles.topsoil.app.progress.table;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
+import org.cirdles.topsoil.app.progress.isotope.IsotopeType;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 
 /**
  * Created by benjaminmuldrow on 7/6/16.
  */
-public class TopsoilTable {
+public class TopsoilTable implements GenericTable {
 
     private final Alerter alerter = new ErrorAlerter();
     private String[] headers;
@@ -165,10 +166,12 @@ public class TopsoilTable {
         return this.table.getItems().toArray(new TopsoilDataEntry [this.getTable().getItems().size()]);
     }
 
+    @Override
     public void deleteRow(int index) {
         this.dataEntries[index].getProperties().remove(0, headers.length);
     }
 
+    @Override
     public void addRow() {
         TopsoilDataEntry dataEntry = new TopsoilDataEntry();
         for (String header : this.headers) {
@@ -177,10 +180,12 @@ public class TopsoilTable {
         this.table.getItems().add(dataEntry);
     }
 
+    @Override
     public void clear() {
         this.getTable().getItems().clear();
     }
 
+    @Override
     public TableView getTable() {
         return this.table;
     }
@@ -189,10 +194,12 @@ public class TopsoilTable {
         return this.isotopeType;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
 
+    @Override
     public String [] getHeaders() {
         return this.headers.clone();
     }

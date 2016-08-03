@@ -1,6 +1,4 @@
-package org.cirdles.topsoil.app.progress;
-
-import java.util.Arrays;
+package org.cirdles.topsoil.app.progress.isotope;
 
 /**
  * Created by sbunce on 6/27/2016.
@@ -13,7 +11,10 @@ public enum IsotopeType {
 
     //TODO headers array is a placeholder for ACTUAL Uranium Thorium headers
     UTh("UTh", "Uranium Thorium",
-            new String[]{"207Pb*/235U", "±2σ (%)", "206Pb*/238U", "±2σ (%)", "Corr Coef"});
+            new String[]{"207Pb*/235U", "±2σ (%)", "206Pb*/238U", "±2σ (%)", "Corr Coef"}),
+
+    Generic("Generic", "Generic",
+            new String[] {"header1", "header2", "header3", "header4", "header5"});
 
     private final String abbr;
     private final String name;
@@ -46,7 +47,7 @@ public enum IsotopeType {
      * @return default headers
      */
     public String[] getHeaders() {
-        String[] result = Arrays.copyOf(this.headers, headers.length);
+        String[] result = this.headers.clone();
         return result;
     }
 }

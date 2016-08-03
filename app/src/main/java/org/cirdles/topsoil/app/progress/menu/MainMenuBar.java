@@ -1,16 +1,19 @@
-package org.cirdles.topsoil.app.progress;
+package org.cirdles.topsoil.app.progress.menu;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import org.cirdles.topsoil.app.plot.PlotType;
+import org.cirdles.topsoil.app.progress.isotope.IsotopeType;
+import org.cirdles.topsoil.app.progress.tab.TopsoilTabPane;
+import org.cirdles.topsoil.app.progress.table.TopsoilTable;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 
 import java.io.IOException;
 
-import static org.cirdles.topsoil.app.progress.MenuItemEventHandler.handleNewTable;
-import static org.cirdles.topsoil.app.progress.MenuItemEventHandler.handleReportIssue;
-import static org.cirdles.topsoil.app.progress.MenuItemEventHandler.handleTableFromFile;
+import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.handleNewTable;
+import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.handleReportIssue;
+import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.handleTableFromFile;
 
 /**
  * Created by sbunce on 5/30/2016.
@@ -150,7 +153,6 @@ public class MainMenuBar extends MenuBar {
                 tabs.add(table);
             } else {
                 ErrorAlerter alerter = new ErrorAlerter();
-                alerter.alert("Invalid Table");
             }
 
         });
