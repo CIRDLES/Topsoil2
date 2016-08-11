@@ -9,6 +9,11 @@ import org.cirdles.topsoil.app.progress.isotope.IsotopeType;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by benjaminmuldrow on 7/6/16.
  */
@@ -162,8 +167,24 @@ public class TopsoilTable implements GenericTable {
         return result;
     }
 
-    private TopsoilDataEntry [] extractData() {
-        return this.table.getItems().toArray(new TopsoilDataEntry [this.getTable().getItems().size()]);
+    /**
+     * Extract data from table as a list of maps of columns : value
+     * @return list of maps of columns : value
+     */
+    public List<Map<String, Object>> extractData() {
+
+        ArrayList<Map<String, Object>> result = new ArrayList<>();
+        HashMap<String, Double> [] columnMaps = new HashMap[this.getHeaders().length];
+        for (int i = 0; i < table.getItems().size(); i ++) {
+            int columnIndex = i % headers.length;
+            columnMaps[columnIndex].put(headers[columnIndex],
+                    table.getItems().get(i).getProperties().get(columnIndex).getValue());
+        }
+        for (HashMap column : columnMaps) {
+            result.add(column);
+        }
+        return result;
+
     }
 
     @Override

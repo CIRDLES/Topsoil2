@@ -8,7 +8,7 @@ import org.cirdles.topsoil.app.progress.table.TopsoilTable;
 /**
  * Created by sbunce on 6/29/2016.
  */
-public class TopsoilTabPane extends TabPane implements GenericTabPane {
+public class TopsoilTabPane extends TabPane {
 
     //Passed to the MainMenuBar and MainButtons Bar
     public TopsoilTabPane() {
@@ -16,7 +16,6 @@ public class TopsoilTabPane extends TabPane implements GenericTabPane {
     }
 
     //Adds a new tab to the MainWindow tab pane
-    @Override
     public void add(TopsoilTable table) {
         Tab newTab = new TopsoilTab(table);
         //TODO Create a way for user to rename tabs
@@ -26,7 +25,6 @@ public class TopsoilTabPane extends TabPane implements GenericTabPane {
         this.getSelectionModel().select(newTab);
     }
 
-    @Override
     public TopsoilTab getSelectedTab() {
         return (TopsoilTab) this.getSelectionModel().getSelectedItem();
     }

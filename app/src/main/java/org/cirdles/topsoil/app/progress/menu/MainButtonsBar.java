@@ -40,8 +40,8 @@ public class MainButtonsBar extends HBox {
         clearButton.setPrefSize(150, 30);
         clearButton.setOnAction(event -> {
             // clear table and add an empty row
-            tabs.getSelectedTab().getGenericTable().clear();
-            tabs.getSelectedTab().getGenericTable().addRow();
+            tabs.getSelectedTab().getTopsoilTable().clear();
+            tabs.getSelectedTab().getTopsoilTable().addRow();
         });
 
         buttonBar.getChildren()

@@ -10,7 +10,7 @@ import org.cirdles.topsoil.app.progress.table.TopsoilTable;
 /**
  * Created by sbunce on 6/30/2016.
  */
-public class TopsoilTab extends Tab implements GenericTab {
+public class TopsoilTab extends Tab {
 
     private TopsoilTable table;
 
@@ -30,12 +30,11 @@ public class TopsoilTab extends Tab implements GenericTab {
         });
     }
 
-    @Override
     public TableView getTable() {
         return table.getTable();
     }
 
-    public GenericTable getGenericTable() {
+    public TopsoilTable getTopsoilTable() {
         return table;
     }
 
