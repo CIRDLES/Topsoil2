@@ -4,7 +4,6 @@ import javafx.scene.control.ChoiceDialog;
 import org.cirdles.topsoil.app.progress.isotope.IsotopeType;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 /**
  * Created by benjaminmuldrow on 8/9/16.
@@ -25,8 +24,13 @@ public class PlotDialog extends ChoiceDialog<String> {
 
         // add names
         this.getItems().addAll(names);
+        this.setSelectedItem(getItems().get(0));
     }
 
+    /**
+     * show dialog and wait for response
+     * @return TopsoilPlotType user's choice of plotType
+     */
     public TopsoilPlotType select() {
 
         final TopsoilPlotType[] result = {null};

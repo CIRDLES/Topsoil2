@@ -43,7 +43,7 @@ public class FileParser {
         if (response.isPresent()) {
             if (response.get() == ButtonType.YES) {
                 containsHeaders = true;
-            } else if (response.get() == ButtonType.NO){
+            } else if (response.get() == ButtonType.NO) {
                 containsHeaders = false;
             }
         } // else containsHeaders is assumed false

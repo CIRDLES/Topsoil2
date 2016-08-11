@@ -2,12 +2,10 @@ package org.cirdles.topsoil.app.progress.menu;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-import org.cirdles.topsoil.app.dataset.RawData;
 import org.cirdles.topsoil.app.dataset.SimpleDataset;
 import org.cirdles.topsoil.app.plot.PlotWindow;
 import org.cirdles.topsoil.app.plot.Variable;
@@ -18,13 +16,11 @@ import org.cirdles.topsoil.app.progress.plot.PlotDialog;
 import org.cirdles.topsoil.app.progress.plot.TopsoilPlotType;
 import org.cirdles.topsoil.app.progress.tab.TopsoilTabPane;
 import org.cirdles.topsoil.app.progress.table.TopsoilTable;
-import org.cirdles.topsoil.app.progress.util.PlotHandler;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 import org.cirdles.topsoil.plot.Plot;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.handleNewTable;
 import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.handleReportIssue;
@@ -128,7 +124,6 @@ public class MainMenuBar extends MenuBar {
             }
         });
 
-
         // Plot Menu
         Menu plotMenu = new Menu("Plot");
         MenuItem generatePlotItem = new MenuItem("Generate Plot");
@@ -190,22 +185,24 @@ public class MainMenuBar extends MenuBar {
                 TopsoilPlotType plotType = new PlotDialog(table.getIsotopeType()).select();
 
                 // variable binding dialog
-                List<Variable> variables = plotType.getVariables();
-                SimpleDataset dataset = new SimpleDataset(table.getTitle(), new TopsoilRawData(table).getRawData());
-                new VariableBindingDialog(variables, dataset).showAndWait()
-                        .ifPresent(data -> {
-                            Plot plot = plotType.getPlot();
-                            plot.setData(data);
+                if (plotType != null) {
+                    List<Variable> variables = plotType.getVariables();
+                    SimpleDataset dataset = new SimpleDataset(table.getTitle(), new TopsoilRawData(table).getRawData());
+                    new VariableBindingDialog(variables, dataset).showAndWait()
+                            .ifPresent(data -> {
+                                Plot plot = plotType.getPlot();
+                                plot.setData(data);
 
-                            Parent plotWindow = new PlotWindow(
-                                    plot, plotType.getPropertiesPanel());
+                                Parent plotWindow = new PlotWindow(
+                                        plot, plotType.getPropertiesPanel());
 
-                            Scene scene = new Scene(plotWindow, 1200, 800);
+                                Scene scene = new Scene(plotWindow, 1200, 800);
 
-                            Stage plotStage = new Stage();
-                            plotStage.setScene(scene);
-                            plotStage.show();
-                        });
+                                Stage plotStage = new Stage();
+                                plotStage.setScene(scene);
+                                plotStage.show();
+                            });
+                }
             }
         });
 

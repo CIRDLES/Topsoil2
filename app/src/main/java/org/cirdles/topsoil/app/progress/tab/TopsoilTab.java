@@ -4,7 +4,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import org.cirdles.topsoil.app.progress.isotope.IsotopeType;
-import org.cirdles.topsoil.app.progress.table.GenericTable;
 import org.cirdles.topsoil.app.progress.table.TopsoilTable;
 
 /**
@@ -17,11 +16,10 @@ public class TopsoilTab extends Tab {
     private final Label label;
 
     public TopsoilTab(TopsoilTable table) {
-        label = new Label(table.getTitle());
+        label = new Label();
         this.setGraphic(label);
         this.table = table;
         this.setContent(this.table.getTable());
-        label.setText(table.getTitle());
         label.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 TabNameDialog nameChange = new TabNameDialog(label.getText());

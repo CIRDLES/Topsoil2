@@ -4,7 +4,6 @@ import javafx.css.Styleable;
 import javafx.event.EventTarget;
 import javafx.scene.control.Skinnable;
 import org.cirdles.topsoil.app.progress.table.GenericTable;
-import org.cirdles.topsoil.app.progress.table.TopsoilTable;
 
 /**
  * Created by benjaminmuldrow on 8/3/16.

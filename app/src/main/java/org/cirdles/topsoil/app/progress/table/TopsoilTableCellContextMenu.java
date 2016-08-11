@@ -4,7 +4,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableCell;
-import org.cirdles.topsoil.app.progress.table.TopsoilTableCell;
 
 /**
  * Created by benjaminmuldrow on 8/1/16.

@@ -1,8 +1,6 @@
 package org.cirdles.topsoil.app.progress.plot;
 
-import com.johnzeringue.extendsfx.layout.CustomVBox;
 import javafx.scene.Node;
-import javafx.scene.layout.VBox;
 import org.cirdles.topsoil.app.plot.Variable;
 import org.cirdles.topsoil.app.plot.Variables;
 import org.cirdles.topsoil.app.plot.standard.ScatterPlotPropertiesPanel;

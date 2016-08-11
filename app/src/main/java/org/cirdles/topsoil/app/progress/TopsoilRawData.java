@@ -1,6 +1,5 @@
 package org.cirdles.topsoil.app.progress;
 
-import javafx.collections.ObservableList;
 import org.cirdles.topsoil.app.dataset.RawData;
 import org.cirdles.topsoil.app.dataset.entry.Entry;
 import org.cirdles.topsoil.app.dataset.field.Field;
@@ -11,7 +10,6 @@ import org.cirdles.topsoil.app.progress.table.TopsoilTable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 /**
  * Created by benjaminmuldrow on 8/3/16.

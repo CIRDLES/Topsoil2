@@ -55,6 +55,6 @@ public enum IsotopeType {
     }
 
     public TopsoilPlotType[] getPlots() {
-        return plots;
+        return plots.clone();
     }
 }

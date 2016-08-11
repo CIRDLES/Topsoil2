@@ -1,6 +1,5 @@
 package org.cirdles.topsoil.app.progress.table;
 
-import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 
 /**
