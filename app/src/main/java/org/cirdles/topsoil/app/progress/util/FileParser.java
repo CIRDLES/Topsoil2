@@ -128,7 +128,7 @@ public class FileParser {
                                 Double.parseDouble(contentAsString[3])
                         )
                 );
-            } else if (contentAsString.length == 5) {       // Corr Coef Provided
+            } else if (contentAsString.length >= 5) {       // Corr Coef Provided and/or extra columns
                 content.add(
                         new TopsoilDataEntry(
                                 Double.parseDouble(contentAsString[0]),

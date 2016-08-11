@@ -1,5 +1,6 @@
 package org.cirdles.topsoil.app.progress;
 
+import javafx.collections.ObservableList;
 import org.cirdles.topsoil.app.dataset.RawData;
 import org.cirdles.topsoil.app.dataset.entry.Entry;
 import org.cirdles.topsoil.app.dataset.field.Field;
@@ -10,6 +11,7 @@ import org.cirdles.topsoil.app.progress.table.TopsoilTable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by benjaminmuldrow on 8/3/16.
@@ -32,13 +34,17 @@ public class TopsoilRawData {
         // Initialize entries
         List<Entry> entries = new ArrayList<>();
 
-        // bind entries to their header's respective field
-        for (int i = 0; i < table.getHeaders().length; i ++) {
-            TopsoilPlotEntry entry = new TopsoilPlotEntry();
-            entry.set((Field<Double>)fields.get(i),
-                    ((TopsoilDataEntry)table.getTable().getItems().get(i)).getProperties().get(i).getValue());
-            entries.add(entry);
+        // put relevant entries into entry list
+        for (int i = 0; i < table.getTable().getItems().size(); i ++) {
+            entries.add(new TopsoilPlotEntry());
+            for (int j = 0; j < table.getHeaders().length; j++) {
+                double currentValue =
+                        ((TopsoilDataEntry)table.getTable().getItems().get(i))
+                        .getProperties().get(j).getValue();
+                entries.get(i).set((NumberField)fields.get(j), currentValue);
+            }
         }
+        // add value
         this.entries = entries;
 
     }

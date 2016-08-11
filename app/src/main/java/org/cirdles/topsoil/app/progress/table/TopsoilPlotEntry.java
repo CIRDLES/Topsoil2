@@ -16,12 +16,14 @@ public class TopsoilPlotEntry implements Entry {
     private Map fieldMap;
 
     public TopsoilPlotEntry() {
-        fieldMap = new HashMap<Field, Object>();
+        fieldMap = new HashMap<Field, Double>();
     }
 
     @Override
     public <T> Optional<T> get(Field<? extends T> field) {
-        return (Optional) this.fieldMap.get(field);
+        //Optional.ofNullable((T) fieldsToValues.get(field))
+        return Optional.ofNullable((T) fieldMap.get(field));
+        //return (Optional<T>) this.fieldMap.get(field);
     }
 
     @Override

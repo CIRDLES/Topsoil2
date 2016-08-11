@@ -13,6 +13,7 @@ import org.cirdles.topsoil.app.plot.PlotWindow;
 import org.cirdles.topsoil.app.plot.Variable;
 import org.cirdles.topsoil.app.plot.VariableBindingDialog;
 import org.cirdles.topsoil.app.progress.TopsoilRawData;
+import org.cirdles.topsoil.app.progress.isotope.IsotopeType;
 import org.cirdles.topsoil.app.progress.plot.PlotDialog;
 import org.cirdles.topsoil.app.progress.plot.TopsoilPlotType;
 import org.cirdles.topsoil.app.progress.tab.TopsoilTabPane;
@@ -119,6 +120,14 @@ public class MainMenuBar extends MenuBar {
                         saveTableAsItem,
                         importTable,
                         isoSystem);
+
+        uraniumLeadSystemItem.setOnAction(event -> {
+            // if the table isn't already UPb
+            if (!tabs.getSelectedTab().getTopsoilTable().getIsotopeType().equals(IsotopeType.UPb)) {
+                tabs.getSelectedTab().getTopsoilTable().setIsotopeType(IsotopeType.UPb);
+            }
+        });
+
 
         // Plot Menu
         Menu plotMenu = new Menu("Plot");

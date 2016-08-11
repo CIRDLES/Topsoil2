@@ -1,9 +1,7 @@
 package org.cirdles.topsoil.app.progress.table;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,6 +14,7 @@ import java.util.List;
 public class TopsoilDataEntry implements GenericDataEntry {
 
     ObservableList<DoubleProperty> properties;
+    // TODO: change this to a list of fields
     List<String> headers;
 
     public TopsoilDataEntry(Double... entries) {

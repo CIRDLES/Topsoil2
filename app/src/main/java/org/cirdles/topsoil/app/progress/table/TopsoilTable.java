@@ -5,6 +5,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
+import org.cirdles.topsoil.app.dataset.field.Field;
+import org.cirdles.topsoil.app.dataset.field.NumberField;
 import org.cirdles.topsoil.app.progress.isotope.IsotopeType;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
@@ -25,6 +27,7 @@ public class TopsoilTable implements GenericTable {
     private IsotopeType isotopeType;
     private String title = "Untitled Table";
     private TopsoilDataEntry [] dataEntries;
+    private Field[] fields;
 
     public TopsoilTable(String [] headers, IsotopeType isotopeType, TopsoilDataEntry... dataEntries) {
 
@@ -104,11 +107,13 @@ public class TopsoilTable implements GenericTable {
     private TableColumn[] createColumns(String [] headers) {
 
         TableColumn[] result = new TableColumn[headers.length];
+        fields = new NumberField[headers.length];
 
         for (int i = 0; i < headers.length; i++) {
 
             // make a new column for each header
             TableColumn<TopsoilDataEntry, Double> column = new TableColumn<>(headers[i]);
+            fields[i] = new NumberField(headers[i]);
             final int columnIndex = i;
 
             // override cell value factory to accept the i'th index of a data entry for the i'th column
@@ -213,6 +218,10 @@ public class TopsoilTable implements GenericTable {
 
     public IsotopeType getIsotopeType() {
         return this.isotopeType;
+    }
+
+    public void setIsotopeType(IsotopeType isotopeType) {
+        this.isotopeType = isotopeType;
     }
 
     @Override
