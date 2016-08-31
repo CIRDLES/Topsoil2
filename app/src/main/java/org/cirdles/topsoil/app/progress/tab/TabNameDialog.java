@@ -6,6 +6,7 @@ import javafx.scene.control.TextInputDialog;
  * Created by sbunce on 7/6/2016.
  */
 public class TabNameDialog {
+
     private String newName;
 
     public TabNameDialog(String oldName) {

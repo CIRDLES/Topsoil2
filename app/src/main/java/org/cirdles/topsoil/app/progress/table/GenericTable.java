@@ -6,6 +6,7 @@ import javafx.scene.control.TableView;
  * Created by benjaminmuldrow on 8/3/16.
  */
 public interface GenericTable {
+
     void deleteRow(int index);
 
     void addRow();
