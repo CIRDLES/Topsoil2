@@ -2,13 +2,10 @@ package org.cirdles.topsoil.app.progress.plot;
 
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import org.cirdles.topsoil.app.plot.PlotType;
-import org.cirdles.topsoil.app.plot.UraniumThoriumPlotType;
 import org.cirdles.topsoil.app.plot.Variable;
 import org.cirdles.topsoil.app.plot.Variables;
 import org.cirdles.topsoil.app.plot.standard.ScatterPlotPropertiesPanel;
 import org.cirdles.topsoil.app.plot.standard.UncertaintyEllipsePlotPropertiesPanel;
-import org.cirdles.topsoil.app.system.IsotopeSystem;
 import org.cirdles.topsoil.plot.Plot;
 import org.cirdles.topsoil.plot.scatter.ScatterPlot;
 import org.cirdles.topsoil.plot.upb.uncertainty.UncertaintyEllipsePlot;
