@@ -2,7 +2,9 @@ package org.cirdles.topsoil.app.progress;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.cirdles.topsoil.app.progress.menu.MainButtonsBar;
@@ -23,13 +25,18 @@ public class MainWindow extends Application {
         Scene scene = new Scene(new VBox(), 750, 750);
 
         TopsoilTabPane tabs = new TopsoilTabPane();
+        tabs.setId("TopsoilTabPane");
         MainMenuBar menuBar = new MainMenuBar(tabs);
+        MenuBar mBar = menuBar.getMenuBar();
+        mBar.setId("MenuBar");
         MainButtonsBar buttonBar = new MainButtonsBar(tabs);
+        HBox buttons = buttonBar.getButtons();
+        buttons.setId("HBox");
 
         // Create Scene
         ((VBox) scene.getRoot()).getChildren().addAll(
-                menuBar.getMenuBar(),
-                buttonBar.getButtons(),
+                mBar,
+                buttons,
                 tabs
         );
 
@@ -58,6 +65,16 @@ public class MainWindow extends Application {
                     alerter.alert("File I/O Error.");
                     e.printStackTrace();
                 }
+            }
+            // shortcut + Z undoes the last undoable action
+            if (keyevent.getCode() == KeyCode.Z &&
+                    keyevent.isShortcutDown()) {
+                ((TopsoilTabPane) scene.lookup("#TopsoilTabPane")).getSelectedTab().undo();
+            }
+            // shortcut + Y redoes the last undone action
+            if (keyevent.getCode() == KeyCode.Y &&
+                    keyevent.isShortcutDown()) {
+                ((TopsoilTabPane) scene.lookup("#TopsoilTabPane")).getSelectedTab().redo();
             }
 
             keyevent.consume();

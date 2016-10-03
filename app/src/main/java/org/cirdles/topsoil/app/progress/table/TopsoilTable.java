@@ -2,12 +2,14 @@ package org.cirdles.topsoil.app.progress.table;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import org.cirdles.topsoil.app.dataset.field.Field;
 import org.cirdles.topsoil.app.dataset.field.NumberField;
 import org.cirdles.topsoil.app.progress.isotope.IsotopeType;
+import org.cirdles.topsoil.app.progress.tab.TopsoilTabPane;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 
@@ -47,6 +49,7 @@ public class TopsoilTable implements GenericTable {
 
         // populate table
         this.table.getColumns().addAll(createColumns(this.headers));
+        resetIds();
         if (dataEntries.length == 0) { // no data provided
 
             TopsoilDataEntry dataEntry = new TopsoilDataEntry();
@@ -63,6 +66,20 @@ public class TopsoilTable implements GenericTable {
             this.table.getItems().addAll(dataEntries);
 
         }
+
+        // Create undoable Commands for column reordering
+        table.getColumns().addListener((ListChangeListener<TableColumn<TopsoilDataEntry,?>>) c -> {
+            c.next();
+            //   if (c.wasRemoved() && c.wasAdded())
+            if (c.wasReplaced()) {
+                TableColumnReorderCommand reorderCommand = new TableColumnReorderCommand(this.table);
+                ((TopsoilTabPane) this.table.getScene().lookup("#TopsoilTabPane")).getSelectedTab().addUndo(reorderCommand);
+                resetIds();
+            }
+            else if (c.wasAdded() ^ c.wasRemoved() ^ c.wasUpdated() ^ c.wasPermutated()) {
+                resetIds();
+            }
+        });
 
         // Handle Keyboard Events
         table.setOnKeyPressed(keyevent -> {
@@ -85,13 +102,11 @@ public class TopsoilTable implements GenericTable {
                 } else {
                     // if on last row
                     if (selectionModel.getSelectedIndex() == table.getItems().size() - 1) {
-                        // add empty row
-                        addRow();
-                        selectionModel.selectBelowCell();
-                    } else {
-                        // move down
-                        selectionModel.selectBelowCell();
+                        NewRowItemCommand newRowCommand = new NewRowItemCommand(this.table);
+                        newRowCommand.execute();
+                        ((TopsoilTabPane) this.table.getScene().lookup("#TopsoilTabPane")).getSelectedTab().addUndo(newRowCommand);
                     }
+                    selectionModel.selectBelowCell();
                 }
                 keyevent.consume();
             }
@@ -232,5 +247,13 @@ public class TopsoilTable implements GenericTable {
     @Override
     public String [] getHeaders() {
         return this.headers.clone();
+    }
+
+    public void resetIds() {
+        int id = 0;
+        for (TableColumn<TopsoilDataEntry, ?> column : this.table.getColumns()) {
+            column.setId(Integer.toString(id));
+            id++;
+        }
     }
 }

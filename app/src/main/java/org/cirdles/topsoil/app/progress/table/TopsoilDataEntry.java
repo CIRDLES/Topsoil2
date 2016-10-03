@@ -34,6 +34,10 @@ public class TopsoilDataEntry implements GenericDataEntry {
         }
     }
 
+    public void changeEntry(int index, DoubleProperty value) {
+        this.getProperties().set(index, value);
+    }
+
     @Override
     public ObservableList<DoubleProperty> getProperties() {
         return properties;
