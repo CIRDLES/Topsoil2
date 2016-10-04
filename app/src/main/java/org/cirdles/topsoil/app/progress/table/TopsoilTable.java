@@ -75,8 +75,7 @@ public class TopsoilTable implements GenericTable {
                 TableColumnReorderCommand reorderCommand = new TableColumnReorderCommand(this.table);
                 ((TopsoilTabPane) this.table.getScene().lookup("#TopsoilTabPane")).getSelectedTab().addUndo(reorderCommand);
                 resetIds();
-            }
-            else if (c.wasAdded() ^ c.wasRemoved() ^ c.wasUpdated() ^ c.wasPermutated()) {
+            } else if (c.wasAdded() ^ c.wasRemoved() ^ c.wasUpdated() ^ c.wasPermutated()) {
                 resetIds();
             }
         });

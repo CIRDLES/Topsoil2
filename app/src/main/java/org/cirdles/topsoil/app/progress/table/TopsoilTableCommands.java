@@ -315,7 +315,6 @@ class DeleteColumnItemCommand implements Command {
  */
 class ClearColumnItemCommand implements Command {
 
-    private TableView<TopsoilDataEntry> tableView;
     private TableColumn<TopsoilDataEntry, Double> column;
     private int index;
     private ArrayDeque<SimpleDoubleProperty> columnData;
@@ -327,7 +326,6 @@ class ClearColumnItemCommand implements Command {
      */
     ClearColumnItemCommand(TopsoilTableCell cell) {
 
-        this.tableView = cell.getTableView();
         this.column = cell.getTableColumn();
         this.index = cell.getColumnIndex();
         this.columnData = new ArrayDeque<>();
