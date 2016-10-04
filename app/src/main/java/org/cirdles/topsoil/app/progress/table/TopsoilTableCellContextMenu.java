@@ -13,6 +13,7 @@ import org.cirdles.topsoil.app.progress.tab.TopsoilTabPane;
  */
 public class TopsoilTableCellContextMenu extends ContextMenu {
 
+    private MenuItem insertRowItem;
     private MenuItem deleteRowItem;
     private MenuItem deleteColumnItem;
     private MenuItem copyCellItem;
@@ -30,6 +31,7 @@ public class TopsoilTableCellContextMenu extends ContextMenu {
 
         // initialize menu items
         // TODO rearrange in a more logical sense
+        insertRowItem = new MenuItem("Insert Row");
         deleteRowItem = new MenuItem("Delete Row");
         copyRowItem = new MenuItem("Copy Row");
         clearRowItem = new MenuItem("Clear Row");
@@ -42,8 +44,14 @@ public class TopsoilTableCellContextMenu extends ContextMenu {
         clearCellItem = new MenuItem("Clear Cell");
 
         // add actions
+        insertRowItem.setOnAction(action -> {
+            InsertRowCommand insertRowCommand = new InsertRowCommand(this.cell);
+            insertRowCommand.execute();
+            ((TopsoilTabPane) this.cell.getScene().lookup("#TopsoilTabPane")).getSelectedTab().addUndo(insertRowCommand);
+        });
+
         deleteRowItem.setOnAction(action -> {
-            DeleteRowItemCommand deleteRowCommand = new DeleteRowItemCommand(this.cell);
+            DeleteRowCommand deleteRowCommand = new DeleteRowCommand(this.cell);
             deleteRowCommand.execute();
             ((TopsoilTabPane) this.cell.getScene().lookup("#TopsoilTabPane")).getSelectedTab().addUndo(deleteRowCommand);
         });
@@ -63,13 +71,13 @@ public class TopsoilTableCellContextMenu extends ContextMenu {
         });
 
         clearRowItem.setOnAction(action -> {
-            ClearRowItemCommand clearRowCommand = new ClearRowItemCommand(this.cell);
+            ClearRowCommand clearRowCommand = new ClearRowCommand(this.cell);
             clearRowCommand.execute();
             ((TopsoilTabPane) this.cell.getScene().lookup("#TopsoilTabPane")).getSelectedTab().addUndo(clearRowCommand);
         });
 
         deleteColumnItem.setOnAction(action -> {
-            DeleteColumnItemCommand deleteColumnCommand = new DeleteColumnItemCommand(this.cell);
+            DeleteColumnCommand deleteColumnCommand = new DeleteColumnCommand(this.cell);
             deleteColumnCommand.execute();
             ((TopsoilTabPane) this.cell.getScene().lookup("#TopsoilTabPane")).getSelectedTab().addUndo(deleteColumnCommand);
         });
@@ -89,7 +97,7 @@ public class TopsoilTableCellContextMenu extends ContextMenu {
         });
 
         clearColumnItem.setOnAction(action -> {
-            ClearColumnItemCommand clearColumnCommand = new ClearColumnItemCommand(this.cell);
+            ClearColumnCommand clearColumnCommand = new ClearColumnCommand(this.cell);
             clearColumnCommand.execute();
             ((TopsoilTabPane) this.cell.getScene().lookup("#TopsoilTabPane")).getSelectedTab().addUndo(clearColumnCommand);
         });
@@ -101,15 +109,15 @@ public class TopsoilTableCellContextMenu extends ContextMenu {
         });
 
         clearCellItem.setOnAction(action -> {
-            ClearCellItemCommand clearCellCommand = new ClearCellItemCommand(this.cell);
+            ClearCellCommand clearCellCommand = new ClearCellCommand(this.cell);
             clearCellCommand.execute();
             ((TopsoilTabPane) this.cell.getScene().lookup("#TopsoilTabPane")).getSelectedTab().addUndo(clearCellCommand);
         });
 
         // add items to context menu
         this.getItems().addAll(
-                deleteRowItem, copyRowItem, clearRowItem, new SeparatorMenuItem(),
-                deleteColumnItem, copyColumnItem,
+                insertRowItem, deleteRowItem, copyRowItem, clearRowItem,
+                new SeparatorMenuItem(), deleteColumnItem, copyColumnItem,
                 //clearColumnItem,
                 new SeparatorMenuItem(),
                 copyCellItem, clearCellItem

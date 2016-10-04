@@ -68,13 +68,15 @@ public class MainWindow extends Application {
             }
             // shortcut + Z undoes the last undoable action
             if (keyevent.getCode() == KeyCode.Z &&
-                    keyevent.isShortcutDown()) {
-                ((TopsoilTabPane) scene.lookup("#TopsoilTabPane")).getSelectedTab().undo();
+                    keyevent.isShortcutDown() &&
+                    !tabs.isEmpty()) {
+                tabs.getSelectedTab().undo();
             }
             // shortcut + Y redoes the last undone action
             if (keyevent.getCode() == KeyCode.Y &&
-                    keyevent.isShortcutDown()) {
-                ((TopsoilTabPane) scene.lookup("#TopsoilTabPane")).getSelectedTab().redo();
+                    keyevent.isShortcutDown() &&
+                    !tabs.isEmpty()) {
+                tabs.getSelectedTab().redo();
             }
 
             keyevent.consume();

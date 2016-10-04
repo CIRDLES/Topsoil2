@@ -34,7 +34,8 @@ class TopsoilTableCellEditCommand implements Command {
      * @param formerValue   the former Double value of the cell
      * @param newValue  the new Double value of the cell
      */
-    TopsoilTableCellEditCommand(TopsoilTableCell cell, Double formerValue, Double newValue) {
+    TopsoilTableCellEditCommand(TopsoilTableCell cell, Double formerValue,
+                                Double newValue) {
         this.cell = cell;
         this.row = cell.getDataEntry();
         this.formerValue = formerValue;
@@ -63,8 +64,10 @@ class TopsoilTableCellEditCommand implements Command {
      */
     private void changeCellValue(Double value) {
 
-        this.row.changeEntry(cell.getColumnIndex(), new SimpleDoubleProperty(value));
-        this.cell.updateItem(this.row.getProperties().get(cell.getColumnIndex()).doubleValue(), false);
+        this.row.changeEntry(cell.getColumnIndex(),
+                new SimpleDoubleProperty(value));
+        this.cell.updateItem(this.row.getProperties()
+                .get(cell.getColumnIndex()).doubleValue(), false);
     }
 
     /**
@@ -80,6 +83,57 @@ class TopsoilTableCellEditCommand implements Command {
 
 /**
  * An undoable <tt>Command</tt> instance that can be added to a TopsoilTab's
+ * <tt>UndoManager</tt> when a row is inserted into the <tt>TableView</tt>.
+ * This class creates an empty <tt>TopsoilDataEntry</tt> and inserts is above
+ * the selected row.
+ *
+ * @author marottajb
+ * @see Command
+ * @see org.cirdles.topsoil.app.progress.util.UndoManager
+ */
+class InsertRowCommand implements Command {
+
+    private TableView<TopsoilDataEntry> tableView;
+    private int index;
+
+    /**
+     * Constructs a new insert row command from the selected cell.
+     *
+     * @param cell  the cell from which the command was called
+     */
+    public InsertRowCommand(TopsoilTableCell cell) {
+        this.tableView = cell.getTableView();
+        this.index = cell.getIndex();
+    }
+
+    /**
+     * Called to execute the row insertion.
+     */
+    public void execute() {
+        this.tableView.getItems().add(index, TopsoilDataEntry.newEmptyDataEntry(this.tableView));
+    }
+
+    /**
+     * Called to undo the row insertion.
+     */
+    public void undo() {
+        this.tableView.getItems().remove(index);
+    }
+
+    /**
+     * Called from the <tt>UndoManager</tt> to get a short description of the
+     * command.
+     *
+     * @return the name of the command
+     */
+    public String getActionName() {
+        return "Insert row";
+    }
+
+}
+
+/**
+ * An undoable <tt>Command</tt> instance that can be added to a TopsoilTab's
  * <tt>UndoManager</tt> when a row is deleted in the <tt>TableView</tt>. This
  * class stores the <tt>TopsoilDataEntry</tt> that was deleted and the index
  * of the <tt>TableView</tt> from which it was deleted.
@@ -88,7 +142,7 @@ class TopsoilTableCellEditCommand implements Command {
  * @see Command
  * @see org.cirdles.topsoil.app.progress.util.UndoManager
  */
-class DeleteRowItemCommand implements Command {
+class DeleteRowCommand implements Command {
 
     private int index;
     private TopsoilDataEntry dataEntry;
@@ -100,7 +154,7 @@ class DeleteRowItemCommand implements Command {
      *
      * @param cell the TopsoilTableCell that the command came from
      */
-    DeleteRowItemCommand(TopsoilTableCell cell) {
+    DeleteRowCommand(TopsoilTableCell cell) {
         this.index = cell.getIndex();
         this.dataEntry = cell.getDataEntry();
         this.tableView = cell.getTableView();
@@ -141,7 +195,7 @@ class DeleteRowItemCommand implements Command {
  * @see Command
  * @see org.cirdles.topsoil.app.progress.util.UndoManager
  */
-class NewRowItemCommand implements Command {
+class NewRowCommand implements Command {
 
     private TableView tableView;
 
@@ -150,7 +204,7 @@ class NewRowItemCommand implements Command {
      *
      * @param tableView the TableView in question
      */
-    NewRowItemCommand(TableView tableView) {
+    NewRowCommand(TableView tableView) {
 
         this.tableView = tableView;
     }
@@ -159,18 +213,15 @@ class NewRowItemCommand implements Command {
      * Called to execute the row creation.
      */
     public void execute() {
-        TopsoilDataEntry dataEntry = new TopsoilDataEntry();
-        for (Object column : this.tableView.getColumns()) {
-            dataEntry.addEntries(0.0);
-        }
-        this.tableView.getItems().add(dataEntry);
+        this.tableView.getItems().add(TopsoilDataEntry.newEmptyDataEntry(this.tableView));
     }
 
     /**
      * Called to undo the row creation.
      */
     public void undo() {
-        tableView.getItems().remove(tableView.getItems().size() - 1);
+        tableView.getItems()
+                .remove(tableView.getItems().size() - 1);
     }
 
     /**
@@ -195,7 +246,7 @@ class NewRowItemCommand implements Command {
  * @see Command
  * @see org.cirdles.topsoil.app.progress.util.UndoManager
  */
-class ClearRowItemCommand implements Command {
+class ClearRowCommand implements Command {
 
     private TableView<TopsoilDataEntry> tableView;
     private TopsoilDataEntry row;
@@ -206,7 +257,7 @@ class ClearRowItemCommand implements Command {
      *
      * @param cell  the TopsoilTableCell that the command came from
      */
-    ClearRowItemCommand(TopsoilTableCell cell) {
+    ClearRowCommand(TopsoilTableCell cell) {
         this.tableView = cell.getTableView();
         this.row = cell.getDataEntry();
         this.index = cell.getIndex();
@@ -216,12 +267,8 @@ class ClearRowItemCommand implements Command {
      * Called to execute the row creation.
      */
     public void execute() {
-        TopsoilDataEntry dataEntry = new TopsoilDataEntry();
-        for (Object column : this.tableView.getColumns()) {
-            dataEntry.addEntries(0.0);
-        }
         this.tableView.getItems().remove(index);
-        this.tableView.getItems().add(index, dataEntry);
+        this.tableView.getItems().add(index, TopsoilDataEntry.newEmptyDataEntry(this.tableView));
     }
 
     /**
@@ -259,7 +306,7 @@ class ClearRowItemCommand implements Command {
  * @see Command
  * @see org.cirdles.topsoil.app.progress.util.UndoManager
  */
-class DeleteColumnItemCommand implements Command {
+class DeleteColumnCommand implements Command {
 
     private TableView tableView;
     private TableColumn<TopsoilDataEntry, Double> column;
@@ -270,7 +317,7 @@ class DeleteColumnItemCommand implements Command {
      *
      * @param cell  the TopsoilTableCell that the command came from
      */
-    DeleteColumnItemCommand(TopsoilTableCell cell) {
+    DeleteColumnCommand(TopsoilTableCell cell) {
         this.tableView = cell.getTableView();
         this.column = cell.getTableColumn();
         this.index = cell.getColumnIndex();
@@ -313,7 +360,7 @@ class DeleteColumnItemCommand implements Command {
  * @see Command
  * @see org.cirdles.topsoil.app.progress.util.UndoManager
  */
-class ClearColumnItemCommand implements Command {
+class ClearColumnCommand implements Command {
 
     private TableColumn<TopsoilDataEntry, Double> column;
     private int index;
@@ -324,7 +371,7 @@ class ClearColumnItemCommand implements Command {
      *
      * @param cell  the TopsoilTableCell that the command came from
      */
-    ClearColumnItemCommand(TopsoilTableCell cell) {
+    ClearColumnCommand(TopsoilTableCell cell) {
 
         this.column = cell.getTableColumn();
         this.index = cell.getColumnIndex();
@@ -337,7 +384,8 @@ class ClearColumnItemCommand implements Command {
     public void execute() {
 
         this.column.setCellValueFactory(param -> {
-            this.columnData.add((SimpleDoubleProperty) param.getValue().getProperties().get(index));
+            this.columnData.add((SimpleDoubleProperty)
+                    param.getValue().getProperties().get(index));
             return (ObservableValue) new SimpleDoubleProperty(0.0);
         });
         this.column.setVisible(false);
@@ -350,7 +398,8 @@ class ClearColumnItemCommand implements Command {
      */
     public void undo() {
 
-        this.column.setCellValueFactory(param -> (ObservableValue) this.columnData.poll());
+        this.column.setCellValueFactory(param -> (ObservableValue)
+                this.columnData.poll());
         this.column.setVisible(false);
         this.column.setVisible(true);
     }
@@ -368,15 +417,15 @@ class ClearColumnItemCommand implements Command {
 
 /**
  * An undoable <tt>Command</tt> instance that can be added to a TopsoilTab's
- * <tt>UndoManager</tt> when a <tt>TopsoilTableCell</tt> in the <tt>TableView</tt>
- * is cleared. This class stores the cell, the row it belongs to, and the former
- * value of the cell.
+ * <tt>UndoManager</tt> when a <tt>TopsoilTableCell</tt> in the
+ * <tt>TableView</tt> is cleared. This class stores the cell, the row it
+ * belongs to, and the former value of the cell.
  *
  * @author marottajb
  * @see Command
  * @see org.cirdles.topsoil.app.progress.util.UndoManager
  */
-class ClearCellItemCommand implements Command {
+class ClearCellCommand implements Command {
 
     private TopsoilTableCell cell;
     private Double formerValue;
@@ -387,7 +436,7 @@ class ClearCellItemCommand implements Command {
      *
      * @param cell  the TopsoilTableCell that the command came from
      */
-    ClearCellItemCommand(TopsoilTableCell cell) {
+    ClearCellCommand(TopsoilTableCell cell) {
         this.cell = cell;
         this.formerValue = cell.getItem();
         this.row = cell.getDataEntry();
@@ -414,8 +463,10 @@ class ClearCellItemCommand implements Command {
      * @param value the Double value to assign
      */
     private void changeCellValue(Double value) {
-        this.row.changeEntry(this.cell.getColumnIndex(), new SimpleDoubleProperty(value));
-        this.cell.updateItem(this.row.getProperties().get(this.cell.getColumnIndex()).doubleValue(), false);
+        this.row.changeEntry(this.cell.getColumnIndex(),
+                new SimpleDoubleProperty(value));
+        this.cell.updateItem(this.row.getProperties()
+                .get(this.cell.getColumnIndex()).doubleValue(), false);
     }
 
     /**
@@ -462,7 +513,8 @@ class TableColumnReorderCommand implements Command {
 
         int[] newColumnOrder = new int[this.tableView.getColumns().size()];
         for (int i = 0; i < numColumns; i++) {
-            newColumnOrder[i] = Integer.parseInt(this.tableView.getColumns().get(i).getId());
+            newColumnOrder[i] = Integer.parseInt(this.tableView.getColumns()
+                    .get(i).getId());
         }
 
         if (newColumnOrder[0] != 0) {
@@ -497,6 +549,13 @@ class TableColumnReorderCommand implements Command {
         }
     }
 
+    /**
+     * Used if a column wasn't dragged to or from the first or last position in
+     * the table view. Primarily for reducing the cyclomatic complexity of the
+     * constructor.
+     *
+     * @param columnOrder an int[] representing the current order of columns
+     */
     public void findNonSpecificColumnDrag(int[] columnOrder) {
         for (int j = 1; j < columnOrder.length - 2; j++) {
             if ((columnOrder[j - 1] != columnOrder[j] - 1)
@@ -512,7 +571,8 @@ class TableColumnReorderCommand implements Command {
      * Called to execute the column reorder.
      */
     public void execute() {
-        TableColumn<TopsoilDataEntry, ?> temp = this.tableView.getColumns().get(this.fromIndex);
+        TableColumn<TopsoilDataEntry, ?> temp = this.tableView.getColumns()
+                .get(this.fromIndex);
 
         this.tableView.getColumns().remove(this.fromIndex);
         this.tableView.getColumns().add(this.toIndex, temp);
@@ -522,7 +582,8 @@ class TableColumnReorderCommand implements Command {
      * Called to undo the column reorder.
      */
     public void undo() {
-        TableColumn<TopsoilDataEntry, ?> temp = this.tableView.getColumns().get(this.toIndex);
+        TableColumn<TopsoilDataEntry, ?> temp = this.tableView.getColumns()
+                .get(this.toIndex);
 
         this.tableView.getColumns().remove(this.toIndex);
         this.tableView.getColumns().add(this.fromIndex, temp);

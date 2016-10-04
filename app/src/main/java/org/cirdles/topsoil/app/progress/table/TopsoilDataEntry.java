@@ -4,6 +4,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,5 +47,13 @@ public class TopsoilDataEntry implements GenericDataEntry {
     @Override
     public String [] getHeaders() {
         return headers.toArray(new String[this.headers.size()]);
+    }
+
+    public static TopsoilDataEntry newEmptyDataEntry(TableView tableView) {
+        TopsoilDataEntry dataEntry = new TopsoilDataEntry();
+        for (Object column : tableView.getColumns()) {
+            dataEntry.addEntries(0.0);
+        }
+        return dataEntry;
     }
 }

@@ -101,7 +101,7 @@ public class TopsoilTable implements GenericTable {
                 } else {
                     // if on last row
                     if (selectionModel.getSelectedIndex() == table.getItems().size() - 1) {
-                        NewRowItemCommand newRowCommand = new NewRowItemCommand(this.table);
+                        NewRowCommand newRowCommand = new NewRowCommand(this.table);
                         newRowCommand.execute();
                         ((TopsoilTabPane) this.table.getScene().lookup("#TopsoilTabPane")).getSelectedTab().addUndo(newRowCommand);
                     }
@@ -254,5 +254,19 @@ public class TopsoilTable implements GenericTable {
             column.setId(Integer.toString(id));
             id++;
         }
+    }
+
+    public boolean isCleared() {
+        boolean rtnval = true;
+        if (table.getItems().size() != 1) {
+            rtnval = false;
+        } else {
+            for (int i = 0; i < table.getColumns().size(); i++) {
+                if (Double.compare(table.getItems().get(0).getProperties().get(i).doubleValue(), 0.0) != 0) {
+                    rtnval = false;
+                }
+            }
+        }
+        return rtnval;
     }
 }
