@@ -101,7 +101,7 @@ class InsertRowCommand implements Command {
      *
      * @param cell  the cell from which the command was called
      */
-    public InsertRowCommand(TopsoilTableCell cell) {
+    InsertRowCommand(TopsoilTableCell cell) {
         this.tableView = cell.getTableView();
         this.index = cell.getIndex();
     }
@@ -556,7 +556,7 @@ class TableColumnReorderCommand implements Command {
      *
      * @param columnOrder an int[] representing the current order of columns
      */
-    public void findNonSpecificColumnDrag(int[] columnOrder) {
+    private void findNonSpecificColumnDrag(int[] columnOrder) {
         for (int j = 1; j < columnOrder.length - 2; j++) {
             if ((columnOrder[j - 1] != columnOrder[j] - 1)
                     && (columnOrder[j + 1] != columnOrder[j] + 1)) {

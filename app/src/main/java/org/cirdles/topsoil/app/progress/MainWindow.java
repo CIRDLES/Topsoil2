@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -46,50 +47,48 @@ public class MainWindow extends Application {
         primaryStage.show();
 
         // Handle Keyboard Shortcuts
-        setTableKeyboardShortcuts(scene, tabs);
-        setUndoKeyboardShortcuts(scene, tabs);
+        scene.setOnKeyPressed(keyEvent -> {
+            setTableKeyboardShortcuts(keyEvent, tabs);
+            setUndoKeyboardShortcuts(keyEvent, tabs);
+            keyEvent.consume();
+        });
+
     }
 
-    private static void setTableKeyboardShortcuts(Scene scene, TopsoilTabPane tabs) {
-        scene.setOnKeyPressed(keyevent -> {
-            // shortcut + T creates a new tab containing an empty table
-            if (keyevent.getCode() == KeyCode.T &&
-                    keyevent.isShortcutDown()) {
-                TopsoilTable table = MenuItemEventHandler.handleNewTable();
+    private static void setTableKeyboardShortcuts(KeyEvent keyEvent, TopsoilTabPane tabs) {
+        // shortcut + T creates a new tab containing an empty table
+        if (keyEvent.getCode() == KeyCode.T &&
+                keyEvent.isShortcutDown()) {
+            TopsoilTable table = MenuItemEventHandler.handleNewTable();
+            tabs.add(table);
+        }
+        // shortcut + I imports a new table from a file
+        if (keyEvent.getCode() == KeyCode.I &&
+                keyEvent.isShortcutDown()) {
+            try {
+                TopsoilTable table = MenuItemEventHandler.handleTableFromFile();
                 tabs.add(table);
+            } catch (IOException e) {
+                Alerter alerter = new ErrorAlerter();
+                alerter.alert("File I/O Error.");
+                e.printStackTrace();
             }
-            // shortcut + I imports a new table from a file
-            if (keyevent.getCode() == KeyCode.I &&
-                    keyevent.isShortcutDown()) {
-                try {
-                    TopsoilTable table = MenuItemEventHandler.handleTableFromFile();
-                    tabs.add(table);
-                } catch (IOException e) {
-                    Alerter alerter = new ErrorAlerter();
-                    alerter.alert("File I/O Error.");
-                    e.printStackTrace();
-                }
-            }
-            keyevent.consume();
-        });
+        }
     }
 
-    private static void setUndoKeyboardShortcuts(Scene scene, TopsoilTabPane tabs) {
-        scene.setOnKeyPressed(keyevent -> {
-            // shortcut + Z undoes the last undoable action
-            if (keyevent.getCode() == KeyCode.Z &&
-                    keyevent.isShortcutDown() &&
-                    !tabs.isEmpty()) {
-                tabs.getSelectedTab().undo();
-            }
-            // shortcut + Y redoes the last undone action
-            if (keyevent.getCode() == KeyCode.Y &&
-                    keyevent.isShortcutDown() &&
-                    !tabs.isEmpty()) {
-                tabs.getSelectedTab().redo();
-            }
-            keyevent.consume();
-        });
+    private static void setUndoKeyboardShortcuts(KeyEvent keyEvent, TopsoilTabPane tabs) {
+        // shortcut + Z undoes the last undoable action
+        if (keyEvent.getCode() == KeyCode.Z &&
+                keyEvent.isShortcutDown() &&
+                !tabs.isEmpty()) {
+            tabs.getSelectedTab().undo();
+        }
+        // shortcut + Y redoes the last undone action
+        if (keyEvent.getCode() == KeyCode.Y &&
+                keyEvent.isShortcutDown() &&
+                !tabs.isEmpty()) {
+            tabs.getSelectedTab().redo();
+        }
     }
 
     public static void main(String[] args) {

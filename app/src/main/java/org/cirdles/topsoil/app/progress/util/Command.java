@@ -19,12 +19,12 @@ package org.cirdles.topsoil.app.progress.util;
  * @author marottajb
  * @see UndoManager
  * @see org.cirdles.topsoil.app.progress.table.TopsoilTableCellEditCommand
- * @see org.cirdles.topsoil.app.progress.table.ClearCellItemCommand
- * @see org.cirdles.topsoil.app.progress.table.NewRowItemCommand
- * @see org.cirdles.topsoil.app.progress.table.ClearRowItemCommand
- * @see org.cirdles.topsoil.app.progress.table.DeleteRowItemCommand
- * @see org.cirdles.topsoil.app.progress.table.ClearColumnItemCommand
- * @see org.cirdles.topsoil.app.progress.table.DeleteColumnItemCommand
+ * @see org.cirdles.topsoil.app.progress.table.ClearCellCommand
+ * @see org.cirdles.topsoil.app.progress.table.NewRowCommand
+ * @see org.cirdles.topsoil.app.progress.table.ClearRowCommand
+ * @see org.cirdles.topsoil.app.progress.table.DeleteRowCommand
+ * @see org.cirdles.topsoil.app.progress.table.ClearColumnCommand
+ * @see org.cirdles.topsoil.app.progress.table.DeleteColumnCommand
  * @see org.cirdles.topsoil.app.progress.table.TableColumnReorderCommand
  */
 public interface Command {

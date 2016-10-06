@@ -166,13 +166,18 @@ public class TopsoilTable implements GenericTable {
         } else if (headers.length < isotopeType.getHeaders().length) {
             int difference = isotopeType.getHeaders().length - headers.length;
             result = new String[isotopeType.getHeaders().length];
+//            int numHeaders = isotopeType.getHeaders().length;
             for (int i = 0; i < isotopeType.getHeaders().length - difference; i++) {
                 result[i] = headers[i];
             }
+//            System.arraycopy(headers, 0, result, 0, numHeaders - difference);
             for (int i = isotopeType.getHeaders().length - difference;
                     i < isotopeType.getHeaders().length; i++) {
                 result[i] = isotopeType.getHeaders()[i];
             }
+//            System.arraycopy(isotopeType.getHeaders(), (numHeaders - difference),
+//                    result, (numHeaders - difference),
+//                    (numHeaders - (numHeaders - difference)));
 
         // if too many headers are provided, only use the first X (depending on isotope flavor)
         } else { // if (headers.length >= isotopeType.getHeaders().length)
