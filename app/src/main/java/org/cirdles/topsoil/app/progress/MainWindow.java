@@ -46,8 +46,12 @@ public class MainWindow extends Application {
         primaryStage.show();
 
         // Handle Keyboard Shortcuts
-        scene.setOnKeyPressed(keyevent -> {
+        setTableKeyboardShortcuts(scene, tabs);
+        setUndoKeyboardShortcuts(scene, tabs);
+    }
 
+    private static void setTableKeyboardShortcuts(Scene scene, TopsoilTabPane tabs) {
+        scene.setOnKeyPressed(keyevent -> {
             // shortcut + T creates a new tab containing an empty table
             if (keyevent.getCode() == KeyCode.T &&
                     keyevent.isShortcutDown()) {
@@ -66,6 +70,12 @@ public class MainWindow extends Application {
                     e.printStackTrace();
                 }
             }
+            keyevent.consume();
+        });
+    }
+
+    private static void setUndoKeyboardShortcuts(Scene scene, TopsoilTabPane tabs) {
+        scene.setOnKeyPressed(keyevent -> {
             // shortcut + Z undoes the last undoable action
             if (keyevent.getCode() == KeyCode.Z &&
                     keyevent.isShortcutDown() &&
@@ -78,7 +88,6 @@ public class MainWindow extends Application {
                     !tabs.isEmpty()) {
                 tabs.getSelectedTab().redo();
             }
-
             keyevent.consume();
         });
     }
