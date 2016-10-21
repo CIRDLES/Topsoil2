@@ -1,5 +1,7 @@
 package org.cirdles.topsoil.app.progress.menu;
 
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -7,11 +9,21 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ButtonType;
 import org.cirdles.topsoil.app.progress.isotope.IsotopeType;
 import org.cirdles.topsoil.app.progress.tab.TopsoilTabPane;
+import javafx.stage.Stage;
+import org.cirdles.topsoil.app.dataset.SimpleDataset;
+import org.cirdles.topsoil.app.plot.PlotWindow;
+import org.cirdles.topsoil.app.plot.Variable;
+import org.cirdles.topsoil.app.plot.VariableBindingDialog;
+import org.cirdles.topsoil.app.progress.TopsoilRawData;
+import org.cirdles.topsoil.app.progress.plot.TopsoilPlotType;
 import org.cirdles.topsoil.app.progress.table.TopsoilTable;
 
 import org.cirdles.topsoil.app.util.ErrorAlerter;
+import org.cirdles.topsoil.plot.Plot;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.handleNewTable;
 import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.handleReportIssue;
@@ -28,7 +40,7 @@ public class MainMenuBar extends MenuBar {
     private MenuItem undoItem;
     private MenuItem redoItem;
 
-    // Project Menu
+    // File Menu
     private MenuItem newProjectItem;
     private MenuItem saveProjectItem;
     private MenuItem saveProjectAsItem;
@@ -39,13 +51,14 @@ public class MainMenuBar extends MenuBar {
     // Table Menu
     private MenuItem newTableItem;
     private MenuItem saveTableItem;
-    private MenuItem saveTableAsItem;
+    private MenuItem exportTableItem;
     // Import >
     private MenuItem tableFromFileItem;
     private MenuItem tableFromClipboardItem;
-    // Isotope System >
-    private MenuItem uraniumLeadSystemItem;
-    private MenuItem uraniumThoriumSystemItem;
+
+    // Plot Menu
+    private Menu plotMenu;
+    private Menu generatePlotMenu;
 
     // Help Menu
     private MenuItem reportIssueItem;
@@ -58,6 +71,7 @@ public class MainMenuBar extends MenuBar {
     }
 
     private void initialize(TopsoilTabPane tabs) {
+
         // Edit Menu
         Menu editMenu = new Menu("Edit");
         undoItem = new MenuItem("Undo");
@@ -78,24 +92,32 @@ public class MainMenuBar extends MenuBar {
                 .addAll(undoItem,
                         redoItem);
 
-        // Project Menu
-        Menu projectMenu = initializeProjectMenuItems(tabs);
+        // File Menu
+        Menu fileMenu = new Menu("File");
+        newProjectItem = new MenuItem("New Project");
+        saveProjectItem = new MenuItem("Save Project");
+        saveProjectAsItem = new MenuItem("Save Project As");
+        openProjectItem = new MenuItem("Open Project");
+        closeProjectItem = new MenuItem("Close Project");
+        mostRecentItem = new MenuItem("Most Recently Used");
+        fileMenu.getItems()
+                .addAll(newProjectItem,
+                        saveProjectItem,
+                        saveProjectAsItem,
+                        openProjectItem,
+                        closeProjectItem,
+                        mostRecentItem);
 
         // Table Menu
         Menu tableMenu = new Menu("Table");
         newTableItem = new MenuItem("New Table");
         saveTableItem = new MenuItem("Save Table");
-        saveTableAsItem = new MenuItem("Save Table As");
+        exportTableItem = new MenuItem("Export Table");
 
         newTableItem.setOnAction(event -> {
             TopsoilTable table = MenuItemEventHandler.handleNewTable();
             tabs.add(table);
         });
-
-        //Saves the currently opened table
-        saveTableItem = new MenuItem("Save Table");
-        //Saves the currently opened table as a specified file
-        saveTableAsItem = new MenuItem("Save Table As");
 
         //Creates Submenu for Imports
         Menu importTable = new Menu("Import Table");
@@ -105,31 +127,16 @@ public class MainMenuBar extends MenuBar {
                 tableFromFileItem,
                 tableFromClipboardItem);
 
-        //Creates Submenu for Isotype system selection
-        Menu isoSystem = new Menu("Set Isotope System");
-        uraniumLeadSystemItem = new MenuItem("UPb");
-        uraniumThoriumSystemItem = new MenuItem("UTh");
-        isoSystem.getItems().addAll(
-                uraniumLeadSystemItem,
-                uraniumThoriumSystemItem);
         tableMenu.getItems()
                 .addAll(newTableItem,
                         saveTableItem,
-                        saveTableAsItem,
-                        importTable,
-                        isoSystem);
-
-        uraniumLeadSystemItem.setOnAction(event -> {
-            // if the table isn't already UPb
-            if (!tabs.getSelectedTab().getTopsoilTable().getIsotopeType().equals(IsotopeType.UPb)) {
-                tabs.getSelectedTab().getTopsoilTable().setIsotopeType(IsotopeType.UPb);
-            }
-        });
+                        exportTableItem,
+                        importTable);
 
         // Plot Menu
-        Menu plotMenu = new Menu("Plot");
-        MenuItem generatePlotItem = new MenuItem("Generate Plot");
-        plotMenu.getItems().add(generatePlotItem);
+        plotMenu = new Menu("Plot");
+        generatePlotMenu = new Menu("Generate Plot");
+        plotMenu.getItems().add(generatePlotMenu);
 
         // Help Menu
         Menu helpMenu = new Menu("Help");
@@ -141,8 +148,8 @@ public class MainMenuBar extends MenuBar {
 
         // Add menus to menuBar
         menuBar.getMenus()
-                .addAll(editMenu,
-                        projectMenu,
+                .addAll(fileMenu,
+                        editMenu,
                         tableMenu,
                         plotMenu,
                         helpMenu);
@@ -165,6 +172,7 @@ public class MainMenuBar extends MenuBar {
             } else {
                 ErrorAlerter alerter = new ErrorAlerter();
             }
+            refreshPlotMenu(tabs);
 
         });
 
@@ -173,22 +181,72 @@ public class MainMenuBar extends MenuBar {
 
             // get new table
             TopsoilTable table = handleNewTable();
-
-            // display new table
             tabs.add(table);
-        });
-
-        // Generate Plot
-        generatePlotItem.setOnAction(event -> {
-            if (!tabs.isEmpty()) {
-                MenuItemEventHandler.handlePlotGenerationForSelectedTable(tabs);
-            }
-        });
+            refreshPlotMenu(tabs);});
 
         // Report Issue
         reportIssueItem.setOnAction(event -> {
             handleReportIssue();
         });
+
+        generatePlotMenu.setOnAction(event -> {
+            refreshPlotMenu(tabs);
+        });
+
+    }
+
+    /**
+     * Display plot
+     * @param plotType type of plot to display
+     * @param table Topsoil Table holding data to display
+     */
+    private void showPlot(TopsoilPlotType plotType, TopsoilTable table) {
+
+        // variable binding dialog
+        if (plotType != null) {
+            List<Variable> variables = plotType.getVariables();
+            SimpleDataset dataset = new SimpleDataset(table.getTitle(), new TopsoilRawData(table).getRawData());
+            new VariableBindingDialog(variables, dataset).showAndWait()
+                    .ifPresent(data -> {
+                        Plot plot = plotType.getPlot();
+                        plot.setData(data);
+
+                        Parent plotWindow = new PlotWindow(
+                                plot, plotType.getPropertiesPanel());
+
+                        Scene scene = new Scene(plotWindow, 1200, 800);
+
+                        Stage plotStage = new Stage();
+                        plotStage.setScene(scene);
+                        plotStage.show();
+                    });
+        }
+    }
+
+    /**
+     * refreshing content of generate plot menu helper function
+     * @param tabs TopsoilTabPane containing current table
+     */
+    public void refreshPlotMenu(TopsoilTabPane tabs) {
+
+        // remove existing sub-menuItems
+        generatePlotMenu.getItems().removeAll(generatePlotMenu.getItems());
+
+        if (!tabs.isEmpty()) {
+
+            // add a sub-menuItem for each applicable plot
+            IsotopeType isotopeType = tabs.getSelectedTab().getTopsoilTable().getIsotopeType();
+            ArrayList<MenuItem> plotItems = new ArrayList<>();
+            for (TopsoilPlotType plot : isotopeType.getPlots()) {
+                MenuItem plotItem = new MenuItem(plot.getName());
+                plotItem.setOnAction(event1 -> {
+                    showPlot(plot, tabs.getSelectedTab().getTopsoilTable());
+                });
+                plotItems.add(plotItem);
+            }
+
+            generatePlotMenu.getItems().addAll(plotItems);
+        }
     }
 
     private Menu initializeProjectMenuItems(TopsoilTabPane tabs) {
@@ -241,4 +299,5 @@ public class MainMenuBar extends MenuBar {
     public MenuBar getMenuBar() {
         return menuBar;
     }
+
 }
