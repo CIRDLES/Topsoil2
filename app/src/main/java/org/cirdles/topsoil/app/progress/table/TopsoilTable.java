@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import org.cirdles.topsoil.app.dataset.field.Field;
@@ -85,20 +86,32 @@ public class TopsoilTable implements GenericTable {
         });
 
         // Handle Keyboard Events
+        table.setOnKeyTyped(keyEvent -> {
+            try {
+                if (Double.valueOf(keyEvent.getCharacter()) != null) {
+                    TablePosition position = table.getFocusModel().getFocusedCell();
+                    table.edit(position.getRow(), table.getColumns().get(position.getColumn()));
+                }
+            } catch (NumberFormatException e) {
+                // do nothing
+            }
+            keyEvent.consume();
+        });
+
         table.setOnKeyPressed(keyevent -> {
             // Tab focuses right cell
             // Shift + Tab focuses left cell
             if (keyevent.getCode().equals(KeyCode.TAB)) {
                 if (keyevent.isShiftDown()) {
-                    selectionModel.selectLeftCell();
+                    selectionModel.selectPrevious();
                 } else {
-                    selectionModel.selectRightCell();
+                    selectionModel.selectNext();
                 }
 
                 keyevent.consume();
 
             // Enter moves down or creates new empty row
-            // Shift + Enter moved up a row
+            // Shift + Enter moves up a row
             } else if (keyevent.getCode().equals(KeyCode.ENTER)) {
                 if (keyevent.isShiftDown()) {
                     selectionModel.selectAboveCell();
