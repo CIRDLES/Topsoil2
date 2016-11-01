@@ -170,9 +170,13 @@ public class MainMenuBar extends MenuBar {
             if (table != null) {
                 tabs.add(table);
             } else {
-                ErrorAlerter alerter = new ErrorAlerter();
+                //
             }
             refreshPlotMenu(tabs);
+
+        });
+
+        tableFromClipboardItem.setOnAction(event -> {
 
         });
 

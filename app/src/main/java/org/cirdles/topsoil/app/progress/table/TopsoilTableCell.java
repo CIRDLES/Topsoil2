@@ -4,8 +4,6 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import org.cirdles.topsoil.app.progress.tab.TopsoilTabPane;
-import org.cirdles.topsoil.app.util.Alerter;
-import org.cirdles.topsoil.app.util.ErrorAlerter;
 import org.controlsfx.control.Notifications;
 
 /**
@@ -14,12 +12,9 @@ import org.controlsfx.control.Notifications;
 public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
 
     private TextField textField;
-    private Alerter alerter;
 
     public TopsoilTableCell() {
         super();
-
-        this.alerter = new ErrorAlerter();
 
         // Handle key press events
         this.setOnKeyPressed(keyEvent -> {
@@ -42,11 +37,11 @@ public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
                                 .addUndo(cellEditCommand);
                     }
 
+                    // commit new value
                     commitEdit(newVal);
-                    getTableView().getFocusModel().focusNext();
                     updateItem(newVal, textField.getText().isEmpty());
                     getTableView().getSelectionModel().selectNext();
-                    requestFocus();
+                    getTableView().requestFocus();
 
                 // entry is invalid
                 } else {
