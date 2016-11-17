@@ -27,7 +27,6 @@ import java.util.Map;
  */
 public class TopsoilTable implements GenericTable {
 
-    private final Alerter alerter = new ErrorAlerter();
     private String[] headers;
     private TableView<TopsoilDataEntry> table;
     private IsotopeType isotopeType;

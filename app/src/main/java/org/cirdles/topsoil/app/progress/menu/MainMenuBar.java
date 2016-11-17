@@ -24,9 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.handleNewTable;
-import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.handleReportIssue;
-import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.handleTableFromFile;
+import static org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler.*;
 
 /**
  * Created by sbunce on 5/30/2016.
@@ -40,12 +38,12 @@ public class MainMenuBar extends MenuBar {
     private MenuItem redoItem;
 
     // File Menu
-    private MenuItem newProjectItem;
-    private MenuItem saveProjectItem;
-    private MenuItem saveProjectAsItem;
+    //private MenuItem newProjectItem;
+    //private MenuItem saveProjectItem;
     private MenuItem openProjectItem;
-    private MenuItem mostRecentItem;
-    private MenuItem closeProjectItem;
+    private MenuItem saveProjectAsItem;
+    //private MenuItem mostRecentItem;
+    //private MenuItem closeProjectItem;
 
     // Table Menu
     private MenuItem newTableItem;
@@ -92,20 +90,7 @@ public class MainMenuBar extends MenuBar {
                         redoItem);
 
         // File Menu
-        Menu fileMenu = new Menu("File");
-        newProjectItem = new MenuItem("New Project");
-        saveProjectItem = new MenuItem("Save Project");
-        saveProjectAsItem = new MenuItem("Save Project As");
-        openProjectItem = new MenuItem("Open Project");
-        closeProjectItem = new MenuItem("Close Project");
-        mostRecentItem = new MenuItem("Most Recently Used");
-        fileMenu.getItems()
-                .addAll(newProjectItem,
-                        saveProjectItem,
-                        saveProjectAsItem,
-                        openProjectItem,
-                        closeProjectItem,
-                        mostRecentItem);
+        Menu projectMenu = initializeProjectMenuItems(tabs);
 
         // Table Menu
         Menu tableMenu = new Menu("Table");
@@ -147,7 +132,7 @@ public class MainMenuBar extends MenuBar {
 
         // Add menus to menuBar
         menuBar.getMenus()
-                .addAll(fileMenu,
+                .addAll(projectMenu,
                         editMenu,
                         tableMenu,
                         plotMenu,
@@ -177,6 +162,17 @@ public class MainMenuBar extends MenuBar {
 
         tableFromClipboardItem.setOnAction(event -> {
 
+            TopsoilTable table = null;
+
+            try {
+                table = handleTableFromClipboard();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (table != null) tabs.add(table);
+            refreshPlotMenu(tabs);
+            
         });
 
         // New, empty table
