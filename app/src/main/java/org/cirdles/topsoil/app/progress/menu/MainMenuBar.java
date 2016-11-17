@@ -18,7 +18,6 @@ import org.cirdles.topsoil.app.progress.TopsoilRawData;
 import org.cirdles.topsoil.app.progress.plot.TopsoilPlotType;
 import org.cirdles.topsoil.app.progress.table.TopsoilTable;
 
-import org.cirdles.topsoil.app.util.ErrorAlerter;
 import org.cirdles.topsoil.plot.Plot;
 
 import java.io.IOException;
