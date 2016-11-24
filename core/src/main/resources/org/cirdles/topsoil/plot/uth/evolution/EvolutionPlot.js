@@ -112,11 +112,11 @@
                 .attr("dy", ".71em");
 
         var xMin = 0;
-        var xMax = 2;
+        var xMax = 1.5;
         var yMin = 0;
-        var yMax = 1.5;
+        var yMax = 2;
 
-        if (data.length > 0) {
+        /*if (data.length > 0) {
             var dataXMin = d3.min(data, function (d) {
                 return d.x - d.sigma_x * plot.getProperty("Uncertainty");
             });
@@ -140,7 +140,7 @@
             yMin =  dataYMin - 0.05 * yRange;
             xMax = dataXMax + 0.05 * xRange;
             yMax = dataYMax + 0.05 * yRange;
-        }
+        }*/
 
         x.domain([xMin, xMax]);
         y.domain([yMin, yMax]);
