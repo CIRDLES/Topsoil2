@@ -2,6 +2,9 @@ package org.cirdles.topsoil.app.progress.isotope;
 
 import org.cirdles.topsoil.app.progress.plot.TopsoilPlotType;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 /**
  * Created by sbunce on 6/27/2016.
  */
@@ -10,11 +13,15 @@ public enum IsotopeType {
     //Isotope abbreviation, isotope name, array of default headers as strings
     UPb("UPb", "Uranium Lead",
             new String[]{"207Pb*/235U", "±2σ (%)", "206Pb*/238U", "±2σ (%)", "Corr Coef"},
-            new TopsoilPlotType[] {TopsoilPlotType.SCATTER_PLOT, TopsoilPlotType.UNCERTAINTY_ELLIPSE_PLOT}),
+            new TopsoilPlotType[] {TopsoilPlotType.UNCERTAINTY_ELLIPSE_PLOT}),
 
     UTh("UTh", "Uranium Thorium",
             new String[]{"207Pb*/235U", "±2σ (%)", "206Pb*/238U", "±2σ (%)", "Corr Coef"},
-            new TopsoilPlotType[] {TopsoilPlotType.SCATTER_PLOT, TopsoilPlotType.EVOLUTION_PLOT});
+            new TopsoilPlotType[] {TopsoilPlotType.EVOLUTION_PLOT});
+
+    // Generic plots
+    private final TopsoilPlotType[] genericPlots =
+            new TopsoilPlotType[]{TopsoilPlotType.SCATTER_PLOT};
 
     private final String abbreviation;
     private final String name;
@@ -25,7 +32,11 @@ public enum IsotopeType {
         this.abbreviation = abbr;
         this.name = name;
         this.headers = headers;
-        this.plots = plots;
+
+        // concatenate generic plots with type-specific plots
+        this.plots = Stream.concat
+                (Arrays.stream(plots), Arrays.stream(genericPlots))
+                .toArray(TopsoilPlotType[]::new);
     }
 
     /**

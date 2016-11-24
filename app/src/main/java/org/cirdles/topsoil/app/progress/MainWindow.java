@@ -9,10 +9,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.cirdles.topsoil.app.progress.menu.MainButtonsBar;
 import org.cirdles.topsoil.app.progress.menu.MainMenuBar;
 import org.cirdles.topsoil.app.progress.menu.MenuItemEventHandler;
 import org.cirdles.topsoil.app.progress.tab.TopsoilTabPane;
@@ -34,14 +32,10 @@ public class MainWindow extends Application {
         MainMenuBar menuBar = new MainMenuBar(tabs);
         MenuBar mBar = menuBar.getMenuBar();
         mBar.setId("MenuBar");
-        MainButtonsBar buttonBar = new MainButtonsBar(tabs);
-        HBox buttons = buttonBar.getButtons();
-        buttons.setId("HBox");
 
         // Create Scene
         ((VBox) scene.getRoot()).getChildren().addAll(
                 mBar,
-                buttons,
                 tabs
         );
 
@@ -59,6 +53,13 @@ public class MainWindow extends Application {
             setUndoKeyboardShortcuts(keyEvent, tabs);
             keyEvent.consume();
         });
+
+        // Handle Tab Change results within broad scope
+        tabs.getSelectionModel().selectedItemProperty().addListener(
+                changeListener -> {
+                    menuBar.refreshPlotMenu(tabs);
+                }
+        );
 
     }
 

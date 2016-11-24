@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.DataFormat;
 import javafx.stage.Stage;
 import org.cirdles.topsoil.app.browse.DesktopWebBrowser;
 import org.cirdles.topsoil.app.dataset.SimpleDataset;
@@ -81,6 +83,48 @@ public class MenuItemEventHandler {
         if (valid) {
             isotopeType = IsotopeSelectionDialog.selectIsotope(new IsotopeSelectionDialog());
             List<TopsoilDataEntry> entries = FileParser.parseFile(file, hasHeaders);
+            data = FXCollections.observableList(entries);
+        }
+
+        // create table
+        if (data == null ||  isotopeType == null) {
+            table = null;
+        } else {
+            table = new TopsoilTable(headers, isotopeType, data.toArray(new TopsoilDataEntry[data.size()]));
+        }
+
+        return table;
+    }
+
+    public static TopsoilTable handleTableFromClipboard() throws IOException {
+
+        TopsoilTable table;
+        boolean valid = true;
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        String clipboardContent = (String) clipboard.getContent(DataFormat.PLAIN_TEXT);
+
+
+        // select headers
+        String [] headers = null;
+        Boolean hasHeaders = null;
+        if (valid) {
+            hasHeaders = FileParser.containsHeaderDialogue();
+            if (hasHeaders == null) {
+                valid = false;
+            } else if (hasHeaders) {
+                // get first line of clipboard split by tabs
+                headers = clipboardContent.split("\n")[0].split("\t");
+            } else {
+                headers = null;
+            }
+        }
+
+        // select isotope flavor
+        IsotopeType isotopeType = null;
+        ObservableList<TopsoilDataEntry> data = null;
+        if (valid) {
+            isotopeType = IsotopeSelectionDialog.selectIsotope(new IsotopeSelectionDialog());
+            List<TopsoilDataEntry> entries = FileParser.parseTxt(clipboardContent.split("\n"), "\t", hasHeaders);
             data = FXCollections.observableList(entries);
         }
 

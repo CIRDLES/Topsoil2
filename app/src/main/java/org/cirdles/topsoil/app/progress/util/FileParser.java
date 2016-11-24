@@ -8,6 +8,7 @@ import org.cirdles.topsoil.app.progress.table.TopsoilDataEntry;
 import org.cirdles.topsoil.app.util.Alerter;
 import org.cirdles.topsoil.app.util.ErrorAlerter;
 import org.cirdles.topsoil.app.util.YesNoAlert;
+import org.controlsfx.control.Notifications;
 
 import java.io.FileNotFoundException;
 import java.io.BufferedReader;
@@ -57,7 +58,7 @@ public class FileParser {
         } else if (extension.equals("tsv")) {
             return parseTsv(file, containsHeaders);
         } else if (extension.equals("txt")) {
-            return parseTxt(file, "\t", containsHeaders);
+            return parseTxt(readLines(file), "\t", containsHeaders);
         } else {
             return null;
             // TODO throw error if invalid file extension
@@ -79,7 +80,7 @@ public class FileParser {
      */
     private static List<TopsoilDataEntry> parseCsv(File file, boolean containsHeaders) throws IOException {
 
-        return parseTxt(file, ",", containsHeaders);
+        return parseTxt(readLines(file), ",", containsHeaders);
 
     }
 
@@ -90,23 +91,22 @@ public class FileParser {
      */
     private static List<TopsoilDataEntry> parseTsv(File file, boolean containsHeaders) throws IOException {
 
-        return parseTxt(file, "\t", containsHeaders);
+        return parseTxt(readLines(file), "\t", containsHeaders);
 
     }
 
     /**
      * Parse TXT File given a delimiter
-     * @param file txt file to read
+     * @param lines array of string lines to read
      * @param delimiter data delimiter
      * @return String array of values
      */
-    private static List<TopsoilDataEntry> parseTxt(File file,
+    public static List<TopsoilDataEntry> parseTxt(String[] lines,
                                                    String delimiter,
                                                    boolean containsHeaders)
             throws IOException {
 
         List<TopsoilDataEntry> content = new ArrayList<TopsoilDataEntry>();
-        String [] lines = readLines(file);
 
         // ignore header row if supplied
         if (containsHeaders) {
@@ -140,7 +140,8 @@ public class FileParser {
                 );
             } else {
                 // TODO throw exception for invalid file
-                throw new IOException("invalid file");
+                Notifications.create().title("Warning").text("Invalid Content for Table").showWarning();
+                // throw new IOException("invalid file");
             }
         }
 

@@ -4,8 +4,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import org.cirdles.topsoil.app.progress.tab.TopsoilTabPane;
-import org.cirdles.topsoil.app.util.Alerter;
-import org.cirdles.topsoil.app.util.ErrorAlerter;
+import org.controlsfx.control.Notifications;
 
 /**
  * Created by benjaminmuldrow on 7/27/16.
@@ -13,12 +12,9 @@ import org.cirdles.topsoil.app.util.ErrorAlerter;
 public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
 
     private TextField textField;
-    private Alerter alerter;
 
     public TopsoilTableCell() {
         super();
-
-        this.alerter = new ErrorAlerter();
 
         // Handle key press events
         this.setOnKeyPressed(keyEvent -> {
@@ -30,6 +26,7 @@ public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
                 // Make sure entry is valid
                 Double newVal = getNumber(textField);
                 if (newVal != null) {
+
                     // Only create undoable command if value was changed.
                     if (Double.compare(this.getItem(), newVal) != 0) {
                         TopsoilTableCellEditCommand cellEditCommand =
@@ -40,16 +37,31 @@ public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
                                 .addUndo(cellEditCommand);
                     }
 
+                    // commit new value
                     commitEdit(newVal);
                     updateItem(newVal, textField.getText().isEmpty());
+                    getTableView().getSelectionModel().selectNext();
+                    getTableView().requestFocus();
+
+                // entry is invalid
                 } else {
+
+                    // restart edit with original value
                     cancelEdit();
-                    alerter.alert("Entry must be a number");
+                    startEdit();
+                    Notifications.create()
+                            .title("Entry Error")
+                            .text("Entry must be a number.")
+                            .showWarning();
                 }
 
             // cancel change
             } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
                 cancelEdit();
+
+            //
+            } else if (keyEvent.getCode().isDigitKey()) {
+                startEdit();
             }
 
             keyEvent.consume();
@@ -60,6 +72,7 @@ public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
             this.setContextMenu(new TopsoilTableCellContextMenu(this));
             menuEvent.consume();
         });
+
     }
 
     @Override
@@ -70,6 +83,7 @@ public class TopsoilTableCell extends TableCell<TopsoilDataEntry, Double> {
         this.textField.setText(getItem().toString());
         this.setGraphic(this.textField);
         this.textField.selectAll();
+        this.textField.requestFocus();
     }
 
     @Override
